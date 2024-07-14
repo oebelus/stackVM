@@ -1,0 +1,14 @@
+C:\Users\imane\OneDrive\Desktop\code\VirtualMachine\bin\Debug\net8.0\vm.exe
+C:\Users\imane\OneDrive\Desktop\code\VirtualMachine\bin\Debug\net8.0\vm.deps.json
+C:\Users\imane\OneDrive\Desktop\code\VirtualMachine\bin\Debug\net8.0\vm.runtimeconfig.json
+C:\Users\imane\OneDrive\Desktop\code\VirtualMachine\bin\Debug\net8.0\vm.dll
+C:\Users\imane\OneDrive\Desktop\code\VirtualMachine\bin\Debug\net8.0\vm.pdb
+C:\Users\imane\OneDrive\Desktop\code\VirtualMachine\obj\Debug\net8.0\vm.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\imane\OneDrive\Desktop\code\VirtualMachine\obj\Debug\net8.0\vm.AssemblyInfoInputs.cache
+C:\Users\imane\OneDrive\Desktop\code\VirtualMachine\obj\Debug\net8.0\vm.AssemblyInfo.cs
+C:\Users\imane\OneDrive\Desktop\code\VirtualMachine\obj\Debug\net8.0\vm.csproj.CoreCompileInputs.cache
+C:\Users\imane\OneDrive\Desktop\code\VirtualMachine\obj\Debug\net8.0\vm.dll
+C:\Users\imane\OneDrive\Desktop\code\VirtualMachine\obj\Debug\net8.0\refint\vm.dll
+C:\Users\imane\OneDrive\Desktop\code\VirtualMachine\obj\Debug\net8.0\vm.pdb
+C:\Users\imane\OneDrive\Desktop\code\VirtualMachine\obj\Debug\net8.0\vm.genruntimeconfig.cache
+C:\Users\imane\OneDrive\Desktop\code\VirtualMachine\obj\Debug\net8.0\ref\vm.dll
