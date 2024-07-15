@@ -24,16 +24,19 @@ class Utils
             else
             {
                 string[] c = arr[i].Split("x");
-                int opp = 5 - c[1].Length;
-                string hex = string.Concat(Enumerable.Repeat('0', opp)) + c[1];
-                byte[] bytes = new byte[5];
+                if (c.Length > 0) {
+                    string nbr = c.Length == 1 ? c[0] : c[1];
+                    int opp = 5 - nbr.Length;
+                    string hex = string.Concat(Enumerable.Repeat('0', opp)) + nbr;
+                    byte[] bytes = new byte[5];
 
-                int j = 0;
-                while (j < 4)
-                {
-                    buffer.Add(Convert.ToByte(hex.Substring(j, 2), 16));
-                    j++;
-                }
+                    int j = 0;
+                    while (j < 4)
+                    {
+                        buffer.Add(Convert.ToByte(hex.Substring(j, 2), 16));
+                        j++;
+                    }
+                }   
             }
         }
 

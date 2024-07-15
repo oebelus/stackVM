@@ -1,9 +1,11 @@
 class VirtualMachine(byte[] program)
 {
     private readonly byte[] memory = new byte[1024];
-    private int counter = 0;
     private readonly Stack<byte> stack = new(1024);
+    private readonly Stack<byte> frame = new(1024);
     private readonly byte[] program = program;
+
+    private int counter = 0;
 
     public VirtualMachine Execute()
     {
@@ -140,19 +142,36 @@ class VirtualMachine(byte[] program)
                     counter++;
                     break;
 
-                case (byte)Instructions.LOAD:
-                    byte index = stack.Pop();
-                    byte val = memory[index];
+                case (byte)Instructions.LOAD: 
+                    byte offset = stack.Pop();
+                    byte index = (byte)(frame.head + offset);
+
+                    stack.Push(stack.ElementAt(index));
+                    counter++;
+                    break;
+
+                case (byte)Instructions.STORE:
+                    offset = stack.Pop();
+                    byte val = stack.Pop();
+                    offset = (byte)(frame.head + offset);
+
+                    memory[stack.ElementAt(offset)] = val;
+                    counter++;
+                    break;
+
+                case (byte)Instructions.GLOAD:
+                    index = stack.Pop();
+                    val = memory[index];
 
                     stack.Push(val);
                     counter++;
                     break;
 
-                case (byte)Instructions.STORE:
+                case (byte)Instructions.GSTORE:
                     index = stack.Pop();
-                    byte store = stack.Pop();
+                    val = stack.Pop();
 
-                    memory[index] = store;
+                    memory[index] = val;
                     counter++;
                     break;
 
@@ -179,8 +198,6 @@ class VirtualMachine(byte[] program)
 
         Console.WriteLine("Stack:");
 
-        int count = 0;
-
         Console.Write("[ ");
 
         stack.StackLogger(50);
@@ -190,9 +207,20 @@ class VirtualMachine(byte[] program)
         Console.WriteLine();
         Console.WriteLine();
 
+        Console.WriteLine("Frame:");
+
+        Console.Write("[ ");
+
+        frame.StackLogger(50);
+
+        Console.Write("]");
+
+        Console.WriteLine();
+        Console.WriteLine();
+
         Console.WriteLine("Memory:");
 
-        count = 0;
+        int count = 0;
 
         Console.Write("[ ");
         while (count < 50)

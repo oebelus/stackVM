@@ -35,4 +35,8 @@ class Stack<T>(int size)
             count++;
         }
     }
+
+    public T ElementAt(int index) {
+        return stack[index];
+    }
 }

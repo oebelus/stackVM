@@ -21,8 +21,10 @@ enum Instructions : byte
     LS,
     RS,
 
-    LOAD,
+    LOAD, // load local val or fct arg
+    GLOAD,
     STORE,
+    GSTORE,
 
     JUMP,
     CJUMP,
@@ -51,9 +53,11 @@ class Program
         {"LS", 16},
         {"RS", 17},
         {"LOAD", 18},
-        {"STORE", 19},
-        {"JUMP", 20},
-        {"CJUMP", 21}
+        {"GLOAD", 19},
+        {"STORE", 20},
+        {"GSTORE", 21},
+        {"JUMP", 22},
+        {"CJUMP", 22},
     };
 }
 

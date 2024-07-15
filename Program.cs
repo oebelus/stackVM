@@ -11,7 +11,7 @@ namespace vm
             0x2,
             ];
 
-            var mn = Utils.Mnemonic("PUSH 0x2 PUSH 0x2 ADD PUSH 0x23 ADD");
+            var mn = Utils.Mnemonic("PUSH 0x2 PUSH 0x2");
 
             VirtualMachine vm = new(mn);
 
