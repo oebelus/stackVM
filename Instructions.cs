@@ -28,6 +28,9 @@ enum Instructions : byte
 
     JUMP,
     CJUMP,
+
+    CALL,
+    RET
 }
 
 class Program
@@ -58,6 +61,8 @@ class Program
         {"GSTORE", 21},
         {"JUMP", 22},
         {"CJUMP", 22},
+        {"CALL", 22},
+        {"RET", 22},
     };
 }
 

@@ -1,25 +1,27 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Imane\\OneDrive\\Desktop\\documents\\stackVM\\vm.csproj": {}
+    "C:\\Users\\imane\\OneDrive\\Desktop\\code\\VirtualMachine\\vm.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Imane\\OneDrive\\Desktop\\documents\\stackVM\\vm.csproj": {
+    "C:\\Users\\imane\\OneDrive\\Desktop\\code\\VirtualMachine\\vm.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Imane\\OneDrive\\Desktop\\documents\\stackVM\\vm.csproj",
+        "projectUniqueName": "C:\\Users\\imane\\OneDrive\\Desktop\\code\\VirtualMachine\\vm.csproj",
         "projectName": "vm",
-        "projectPath": "C:\\Users\\Imane\\OneDrive\\Desktop\\documents\\stackVM\\vm.csproj",
-        "packagesPath": "C:\\Users\\Imane\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Imane\\OneDrive\\Desktop\\documents\\stackVM\\obj\\",
+        "projectPath": "C:\\Users\\imane\\OneDrive\\Desktop\\code\\VirtualMachine\\vm.csproj",
+        "packagesPath": "C:\\Users\\imane\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\imane\\OneDrive\\Desktop\\code\\VirtualMachine\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Imane\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\imane\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -32,6 +34,11 @@
           "warnAsError": [
             "NU1605"
           ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -53,7 +60,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.301/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

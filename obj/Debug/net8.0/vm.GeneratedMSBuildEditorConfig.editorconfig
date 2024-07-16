@@ -8,6 +8,6 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = vm
-build_property.ProjectDir = C:\Users\Imane\OneDrive\Desktop\documents\stackVM\
+build_property.ProjectDir = C:\Users\imane\OneDrive\Desktop\code\VirtualMachine\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 

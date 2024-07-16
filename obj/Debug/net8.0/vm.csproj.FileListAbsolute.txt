@@ -27,3 +27,4 @@ C:\Users\Imane\OneDrive\Desktop\documents\stackVM\obj\Debug\net8.0\refint\vm.dll
 C:\Users\Imane\OneDrive\Desktop\documents\stackVM\obj\Debug\net8.0\vm.pdb
 C:\Users\Imane\OneDrive\Desktop\documents\stackVM\obj\Debug\net8.0\vm.genruntimeconfig.cache
 C:\Users\Imane\OneDrive\Desktop\documents\stackVM\obj\Debug\net8.0\ref\vm.dll
+C:\Users\imane\OneDrive\Desktop\code\VirtualMachine\obj\Debug\net8.0\vm.sourcelink.json
