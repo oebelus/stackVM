@@ -36,7 +36,8 @@ class Stack<T>(int size)
         }
     }
 
-    public T ElementAt(int index) {
+    public T ElementAt(int index)
+    {
         return stack[index];
     }
 }

@@ -1,3 +1,5 @@
+using System.Linq;
+
 class VirtualMachine(byte[] program)
 {
     private readonly byte[] memory = new byte[1024];
@@ -6,10 +8,9 @@ class VirtualMachine(byte[] program)
     private static readonly byte frame_end = 42;
     private byte frame_pointer = frame_start;
     private readonly Stack<byte> frame = new(frame_end - frame_start);
-    private readonly Stack<byte> call_stack = new(frame_start - frame_end);
+    private readonly Stack<byte> call_stack = new(frame_end - frame_start);
     private readonly byte[] program = program;
-    private List<string> messages = [];
-    private int counter = 0;
+    private byte counter = 0;
 
     public VirtualMachine Execute()
     {
@@ -198,9 +199,20 @@ class VirtualMachine(byte[] program)
                     break;
 
                 case Instructions.CALL:
+                    call_stack.Push((byte)(counter + 5));
+
+                    destination = Utils.ToUint32(program.Skip(counter + 1).Take(4).ToArray());
+
+                    counter = destination;
                     break;
 
                 case Instructions.RET:
+                    index = call_stack.Pop();
+                    counter = index;
+                    break;
+
+                case Instructions.HALT:
+                    counter = (byte)program.Length;
                     break;
             }
         }
@@ -209,73 +221,50 @@ class VirtualMachine(byte[] program)
 
     public void Logger()
     {
-        Console.WriteLine();
-
-        Console.WriteLine("Stack:");
-
-        Console.Write("[ ");
+        Console.Write($"\nSTACK:\n\n[ ");
 
         stack.StackLogger(50);
 
-        Console.Write("]");
+        Console.Write("]\n\n");
 
-        Console.WriteLine();
-        Console.WriteLine();
+        Console.WriteLine($"Head: {stack.head}\n");
 
-        Console.WriteLine("Frame:");
-
-        Console.Write("[ ");
-
-        frame.StackLogger(frame_end - frame_start);
-
-        Console.Write("]");
-
-        Console.WriteLine();
-        Console.WriteLine();
-
-        Console.WriteLine("Memory:");
+        Console.Write("MEMORY:\n\n[ ");
 
         int count = 0;
-
-        Console.Write("[ ");
         while (count < 50)
         {
             Console.Write(memory[count] + " ");
             count++;
         }
-        Console.Write("]");
 
-        Console.WriteLine();
+        Console.Write("]\n\n");
 
-        Console.WriteLine();
+        Console.Write("STACK FRAME:\n\n[ ");
 
-        Console.WriteLine("Program:");
+        frame.StackLogger(frame_end - frame_start);
+
+        Console.Write("]\n\n");
+
+        Console.WriteLine($"Frame Pointer: {frame.head}, {frame_pointer}\n");
+
+        Console.Write("PROGRAM:\n\n[ ");
 
         foreach (var item in program)
         {
             Console.Write(item + " ");
         }
 
-        Console.WriteLine();
+        Console.Write("]\n\n");
 
-        Console.WriteLine();
+        Console.WriteLine($"Counter: {counter} \n");
 
-        Console.WriteLine("Counter: " + counter);
+        Console.Write("CALL STACK:\n\n[ ");
 
-        Console.WriteLine();
+        call_stack.StackLogger(frame_end - frame_start);
 
-        Console.WriteLine("Head: " + stack.head);
+        Console.Write("]\n\n");
 
-        Console.WriteLine();
-
-        Console.WriteLine("Frame Pointer: " + frame.head);
-        Console.WriteLine("Frame pointer in Memory: " + frame_pointer);
-
-        Console.WriteLine();
-
-        foreach (var message in messages)
-        {
-            Console.WriteLine(message);
-        }
+        Console.WriteLine($"Call Stack Pointer: {call_stack.head}\n");
     }
 }

@@ -1,19 +1,20 @@
-﻿using System.Text;
-
-namespace vm
+﻿namespace vm
 {
     class Program
     {
         public static void Main()
         {
-            byte[] program = [0x0, 0x0, 0x0, 0x0, 0x2,
-            0x0, 0x0, 0x0, 0x0, 0x17,
-            0x2,
+            byte[] program = [0x0, 0x0, 0x0, 0x0, 0x5,
+            0x0, 0x0, 0x0, 0x0, 0x5,
+            0x18, 0x0, 0x0, 0x0, 0x10,
+            0x1A,
+            0x02,
+            0x19
             ];
 
-            var mn = Utils.Mnemonic("PUSH 0x2 PUSH 0x2 PUSH 0x2 STORE");
+            //var mn = Utils.Mnemonic("PUSH 0x5 PUSH 0x5 CALL <add> HALT <add> ADD RET");
 
-            VirtualMachine vm = new(mn);
+            VirtualMachine vm = new(program);
 
             vm.Execute();
 
@@ -23,6 +24,20 @@ namespace vm
     }
 }
 
-// "PUSH 0x2 PUSH 0x2 ADD"
+/*
+
+.main
+    PUSH 5
+    PUSH 5
+    CALL
+
+.add
+    POP
+    ADD
+    RET
+
+
+=> PUSH 0x5 PUSH 0x5 CALL ADD RET 
+*/
 
 
