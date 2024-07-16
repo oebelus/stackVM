@@ -199,8 +199,8 @@ class VirtualMachine(byte[] program)
                     break;
 
                 case Instructions.CALL:
-                    call_stack.Push((byte)(counter + 5));
 
+                    call_stack.Push((byte)(counter + 5));
                     destination = Utils.ToUint32(program.Skip(counter + 1).Take(4).ToArray());
 
                     counter = destination;
