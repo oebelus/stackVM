@@ -2,7 +2,7 @@ class VirtualMachine(byte[] program)
 {
     private readonly byte[] memory = new byte[1024];
     private readonly Stack<byte> stack = new(1024);
-    private readonly Stack<byte[]> stackFrames = new(64);
+    private readonly Stack<byte[]> stackFrames = new(16);
     private readonly Stack<byte> call_stack = new(16);
     private readonly byte[] program = program;
     private byte counter = 0;
