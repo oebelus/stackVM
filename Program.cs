@@ -24,31 +24,21 @@
 
             // vm.Logger();
 
-            Dictionary<string, string> list = Parse.ParseFunction("Add: x, y -> x + y;");
+            List<string>  list = Parse.ParseFunction("Main: \nAdd 5, 7  \nAdd: x, y -> x + y;");
 
-            foreach (var (key, val) in list)
+            foreach (var val in list)
             {
-                Console.WriteLine(key + ": " + val);
+                Console.WriteLine(val);
             }
+            
         }
     }
 }
 
 /*
-
-.main
-    PUSH 5
-    PUSH 5
-    CALL
-
-.add
-    POP
-    ADD
-    RET
-
-
-=> PUSH 0x5 PUSH 0x5 CALL ADD RET 
-
+Main: 
+    Add 5, 7;
+    
+Add: x, y -> x + y;
 */
-
 
