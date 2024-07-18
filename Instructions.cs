@@ -35,7 +35,7 @@ enum Instructions : byte
     HALT
 }
 
-class Program
+class Instruction
 {
     public static Dictionary<string, int> instruction = new()
     {

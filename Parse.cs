@@ -1,15 +1,18 @@
-class Parse {
-    readonly string[] separators = [",", "->", ","];
-    
-    public Dictionary<int, string> ParseFunction(string str) {
-        int count = 0;
-        List<string> parts = [];
+class Parse
+{
+    readonly static string[] separators = ["->", ":"];
 
-        for (int i = 0; i < str.Length; i++) {
-            if (separators.Contains(str[i].ToString())) {
+    public static Dictionary<string, string> ParseFunction(string str)
+    {
+        string[] parsed = str.Split(separators, StringSplitOptions.RemoveEmptyEntries);
 
-            }
-        }
+        Dictionary<string, string> function = [];
+
+        function.Add("name", parsed[0].Trim());
+        function.Add("args", parsed[1].Trim());
+        function.Add("body", parsed[2].Trim());
+
+        return function;
     }
 }
 

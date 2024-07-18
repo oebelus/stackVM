@@ -1,4 +1,5 @@
-class Mnemonics {
+class Mnemonics
+{
     public static byte[] Mnemonic(string mnemo)
     {
         string[] arr = mnemo.Split(" ");
@@ -9,7 +10,7 @@ class Mnemonics {
         for (int i = 0; i < length; i++)
         {
             var val = arr[i];
-            if (Program.instruction.TryGetValue(val, out int value))
+            if (Instruction.instruction.TryGetValue(val, out int value))
             {
                 buffer.Add((byte)value);
             }
@@ -25,7 +26,7 @@ class Mnemonics {
 
                     while (k < arr.Length && arr[k][2..] != val[1..])
                     {
-                        if (Program.instruction.ContainsKey(arr[k]))
+                        if (Instruction.instruction.ContainsKey(arr[k]))
                         {
                             inc += 1;
                             // Console.WriteLine($"{arr[k]}, {inc}");
