@@ -40,4 +40,19 @@ class Stack<T>(int size)
     {
         return stack[index];
     }
+
+    public int Length()
+    {
+        return size;
+    }
+
+    public T Peek()
+    {
+        return stack[0];
+    }
+
+    public T Pook()
+    {
+        return stack[head - 1];
+    }
 }

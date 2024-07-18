@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Linq;
 
 class VirtualMachine(byte[] program)
@@ -7,7 +8,7 @@ class VirtualMachine(byte[] program)
     private static readonly byte frame_start = 20;
     private static readonly byte frame_end = 42;
     private byte frame_pointer = frame_start;
-    private readonly Stack<byte> frame = new(frame_end - frame_start);
+    private readonly Stack<byte[]> stackFrame = new(1);
     private readonly Stack<byte> call_stack = new(frame_end - frame_start);
     private readonly byte[] program = program;
     private byte counter = 0;
@@ -16,6 +17,8 @@ class VirtualMachine(byte[] program)
     {
         byte operand_1;
         byte operand_2;
+
+        stackFrame.Push(new byte[32]);
 
         while (counter < program.Length)
         {
@@ -148,26 +151,26 @@ class VirtualMachine(byte[] program)
                     break;
 
                 case Instructions.LOAD:
-                    byte index = frame_pointer;
+                    byte index = stack.Pop();
 
-                    stack.Push(stack.ElementAt(index));
+                    byte[] arr = stackFrame.Pook();
 
-                    frame_pointer = (byte)((frame_pointer - 1) % frame_end);
+                    stack.Push(arr[index]);
 
                     counter++;
                     break;
 
                 case Instructions.STORE:
+                    index = stack.Pop();
                     byte val = stack.Pop();
 
-                    frame.Push(val);
+                    arr = stackFrame.Pook();
 
-                    memory[frame_pointer] = val;
+                    arr[index] = val;
 
-                    frame_pointer = (byte)((frame_pointer + 1) % frame_end);
-                    stack.head--;
                     counter++;
                     break;
+
 
                 case Instructions.GLOAD:
                     index = stack.Pop();
@@ -242,11 +245,14 @@ class VirtualMachine(byte[] program)
 
         Console.Write("STACK FRAME:\n\n[ ");
 
-        frame.StackLogger(frame_end - frame_start);
+        var el = stackFrame.ElementAt(0);
+
+        foreach (var item in el)
+            Console.Write(item + " ");
 
         Console.Write("]\n\n");
 
-        Console.WriteLine($"Frame Pointer: {frame.head}, {frame_pointer}\n");
+        Console.WriteLine($"Frame Pointer: {stackFrame.head}, {frame_pointer}\n");
 
         Console.Write("PROGRAM:\n\n[ ");
 

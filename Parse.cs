@@ -10,29 +10,34 @@ class Parse
 
         string subs = "";
 
-        for (int i = 0; i < str.Length; i++) {
-            if (str[i] == ':') {
+        for (int i = 0; i < str.Length; i++)
+        {
+            if (str[i] == ':')
+            {
                 int j = i - 1;
-                while (j >= 0 && str[j] != '\n') {
+                while (j >= 0 && str[j] != '\n')
+                {
                     subs = str[j] + subs;
                     j--;
                 }
 
                 functions.Add(subs.Trim());
 
-                if (!subs.Equals("main", StringComparison.CurrentCultureIgnoreCase)) {
+                if (!subs.Equals("main", StringComparison.CurrentCultureIgnoreCase))
+                {
                     string func = "";
 
                     int k = i + 1;
-                    while (str[k] != '\n' && k + 1 < length) {
+                    while (str[k] != '\n' && k + 1 < length)
+                    {
                         func += str[k];
                         k++;
                     }
 
                     string[] funcTokens = func.Split("->", StringSplitOptions.RemoveEmptyEntries);
                     int arguments = funcTokens[0].Split(',').Length;
-                    int operation = '0'; 
-                     
+                    //int operation = '0';
+
                     Console.WriteLine(funcTokens[1].Length);
                     //Console.WriteLine("op: " + operation);
 
@@ -43,7 +48,7 @@ class Parse
 
                 }
             }
-            
+
             subs = "";
         }
 
