@@ -1,15 +1,9 @@
-using System.Diagnostics;
-using System.Linq;
-
 class VirtualMachine(byte[] program)
 {
     private readonly byte[] memory = new byte[1024];
     private readonly Stack<byte> stack = new(1024);
-    private static readonly byte frame_start = 20;
-    private static readonly byte frame_end = 42;
-    private readonly byte frame_pointer = frame_start;
     private readonly Stack<byte[]> stackFrames = new(64);
-    private readonly Stack<byte> call_stack = new(frame_end - frame_start);
+    private readonly Stack<byte> call_stack = new(16);
     private readonly byte[] program = program;
     private byte counter = 0;
 
@@ -252,7 +246,7 @@ class VirtualMachine(byte[] program)
 
         Console.Write("]\n\n");
 
-        Console.WriteLine($"Frame Pointer: {stackFrames.head}, {frame_pointer}\n");
+        Console.WriteLine($"Frame Pointer: {stackFrames.head}\n");
 
         Console.Write("PROGRAM:\n\n[ ");
 
@@ -267,7 +261,7 @@ class VirtualMachine(byte[] program)
 
         Console.Write("CALL STACK:\n\n[ ");
 
-        call_stack.StackLogger(frame_end - frame_start);
+        call_stack.StackLogger(16);
 
         Console.Write("]\n\n");
 
