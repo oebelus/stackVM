@@ -7,8 +7,8 @@ class VirtualMachine(byte[] program)
     private readonly Stack<byte> stack = new(1024);
     private static readonly byte frame_start = 20;
     private static readonly byte frame_end = 42;
-    private byte frame_pointer = frame_start;
-    private readonly Stack<byte[]> stackFrame = new(1);
+    private readonly byte frame_pointer = frame_start;
+    private readonly Stack<byte[]> stackFrames = new(64);
     private readonly Stack<byte> call_stack = new(frame_end - frame_start);
     private readonly byte[] program = program;
     private byte counter = 0;
@@ -17,8 +17,6 @@ class VirtualMachine(byte[] program)
     {
         byte operand_1;
         byte operand_2;
-
-        stackFrame.Push(new byte[32]);
 
         while (counter < program.Length)
         {
@@ -153,7 +151,7 @@ class VirtualMachine(byte[] program)
                 case Instructions.LOAD:
                     byte index = stack.Pop();
 
-                    byte[] arr = stackFrame.Pook();
+                    byte[] arr = stackFrames.Pook();
 
                     stack.Push(arr[index]);
 
@@ -164,7 +162,7 @@ class VirtualMachine(byte[] program)
                     index = stack.Pop();
                     byte val = stack.Pop();
 
-                    arr = stackFrame.Pook();
+                    arr = stackFrames.Pook();
 
                     arr[index] = val;
 
@@ -204,6 +202,7 @@ class VirtualMachine(byte[] program)
                 case Instructions.CALL:
 
                     call_stack.Push((byte)(counter + 5));
+                    stackFrames.Push(new byte[32]);
                     destination = Utils.ToUint32(program.Skip(counter + 1).Take(4).ToArray());
 
                     counter = destination;
@@ -211,6 +210,7 @@ class VirtualMachine(byte[] program)
 
                 case Instructions.RET:
                     index = call_stack.Pop();
+                    stackFrames.Pop();
                     counter = index;
                     break;
 
@@ -245,14 +245,14 @@ class VirtualMachine(byte[] program)
 
         Console.Write("STACK FRAME:\n\n[ ");
 
-        var el = stackFrame.ElementAt(0);
+        var el = stackFrames.ElementAt(0);
 
         foreach (var item in el)
             Console.Write(item + " ");
 
         Console.Write("]\n\n");
 
-        Console.WriteLine($"Frame Pointer: {stackFrame.head}, {frame_pointer}\n");
+        Console.WriteLine($"Frame Pointer: {stackFrames.head}, {frame_pointer}\n");
 
         Console.Write("PROGRAM:\n\n[ ");
 
