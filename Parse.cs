@@ -1,11 +1,11 @@
 class Parse
 {
     readonly static string[] separators = ["->", ":"];
+    readonly static char[] binaryOperations = ['=', '-', '/', '*', '%', '/', '&', '|'];
 
-    public static List<string> ParseFunction(string str)
+    public static List<Function> ParseFunctions(string str)
     {
-        Dictionary<string, List<int>> function = [];
-        List<string> functions = [];
+        List<Function> functions = [];
         int length = str.Length;
 
         string subs = "";
@@ -21,8 +21,6 @@ class Parse
                     j--;
                 }
 
-                functions.Add(subs.Trim());
-
                 if (!subs.Equals("main", StringComparison.CurrentCultureIgnoreCase))
                 {
                     string func = "";
@@ -35,17 +33,20 @@ class Parse
                     }
 
                     string[] funcTokens = func.Split("->", StringSplitOptions.RemoveEmptyEntries);
+
                     int arguments = funcTokens[0].Split(',').Length;
-                    //int operation = '0';
 
-                    Console.WriteLine(funcTokens[1].Length);
-                    //Console.WriteLine("op: " + operation);
+                    List<char> operations = [];
 
-                    foreach (var item in funcTokens)
+                    foreach (var item in funcTokens[1])
                     {
-                        Console.WriteLine(item);
+                        if (item != ' ' && binaryOperations.Contains(item))
+                        {
+                            operations.Add(item);
+                        }
                     }
 
+                    functions.Add(new Function([.. operations], arguments, subs.Trim()));
                 }
             }
 
@@ -54,6 +55,43 @@ class Parse
 
 
         return functions;
+    }
+
+    public static string ToByteCode(string code)
+    {
+        string bytecode = "";
+        List<Function> functions = ParseFunctions(code);
+
+        int index = code.IndexOf("Main") + 5;
+        string[] arr = code.Split("\n\t");
+        string[] mainBody = arr[1..(arr.Length - 1)];
+
+        foreach (var item in mainBody)
+        {
+            string[] init = item.Split(' ');
+
+            if (init.Length > 0)
+            {
+                Function function = functions.Where(function => function.Name == init[0].Trim()).ToArray()[0];
+                Console.WriteLine(function.Name);
+
+                string[] args = string.Join(' ', init[1..]).Split(",").Where(x => x.Trim() != "").ToArray();
+
+                int length = string.Join(' ', init[1..]).Split(",").Where(x => x.Trim() != "").ToArray().Length;
+
+                if (function.Arguments == length)
+                {
+                    foreach (var op in args)
+                    {
+                        bytecode += " PUSH " + op.Trim();
+                    }
+                    bytecode += " CALL " + function.Name.Trim();
+                }
+            }
+
+        }
+
+        return bytecode.Trim();
     }
 }
 

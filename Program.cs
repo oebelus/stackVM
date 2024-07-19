@@ -16,20 +16,19 @@
             // 0x19,
             // ];
 
-            var mn = Mnemonics.Mnemonic("PUSH 0x5 PUSH 0x2 STORE");
+            // var mn = Mnemonics.Mnemonic("PUSH 0x5 PUSH 0x2 STORE");
 
-            VirtualMachine vm = new(mn);
+            // VirtualMachine vm = new(mn);
 
-            vm.Execute();
+            // vm.Execute();
 
-            vm.Logger();
+            // vm.Logger();
 
-            List<string> list = Parse.ParseFunction("Main: \nAdd 5, 7  \nAdd: x, y -> x + y;");
+            List<Function> list = Parse.ParseFunctions("Main: \nAdd 5, 7;  \nAdd: x, y -> x + y;\nSub: x, y -> x - y\nSome_gibberish: x, y, z -> x + y - z * z");
 
-            foreach (var val in list)
-            {
-                Console.WriteLine(val);
-            }
+            Console.WriteLine(Parse.ToByteCode("Main: \n\tAdd 5, 7\n\tSub 4, 9  \n\tAdd: x, y -> x + y;\nSub: x, y -> x - y\nSome_gibberish: x, y, z -> x + y - z * z"));
+
+            // PUSH 5 PUSH 7 CALL _ HALT ADD RET SUB RET 
 
         }
     }
@@ -37,8 +36,10 @@
 
 /*
 Main: 
-    Add 5, 7;
+    Add 5, 7
+    Sub 4, 9
     
 Add: x, y -> x + y;
+SUB: x, y -> x - y;
 */
 
