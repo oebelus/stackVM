@@ -190,7 +190,7 @@ class VirtualMachine(byte[] program)
                     byte condition = stack.Pop();
                     destination = stack.Pop();
 
-                    counter = condition != 0 ? destination : counter;
+                    counter = (byte)(condition != 0 ? destination : counter + 1);
                     break;
 
                 case Instructions.CALL:
@@ -237,16 +237,19 @@ class VirtualMachine(byte[] program)
 
         Console.Write("]\n\n");
 
-        Console.Write("STACK FRAME:\n\n[ ");
+        if (stackFrames.head > 0)
+        {
+            Console.Write("STACK FRAME:\n\n[ ");
 
-        var el = stackFrames.ElementAt(0);
+            var el = stackFrames.ElementAt(0);
 
-        foreach (var item in el)
-            Console.Write(item + " ");
+            foreach (var item in el)
+                Console.Write(item + " ");
 
-        Console.Write("]\n\n");
+            Console.Write("]\n\n");
 
-        Console.WriteLine($"Frame Pointer: {stackFrames.head}\n");
+            Console.WriteLine($"Frame Pointer: {stackFrames.head}\n");
+        }
 
         Console.Write("PROGRAM:\n\n[ ");
 
