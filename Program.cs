@@ -1,4 +1,4 @@
-﻿using iLang.Parser;
+using iLang.Parser;
 
 var code = @"
 Max : [a, b] -> (a > b) ? a : b; 
