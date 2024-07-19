@@ -1,37 +1,17 @@
-﻿namespace vm
-{
-    class Program
-    {
-        public static void Main()
-        {
-            byte[] program = [0, 0, 0, 0, 25,
-            0, 0, 0, 0, 25,
-            ];
+using iLang.Parser;
 
-            var mn = Mnemonics.Mnemonic("PUSH 25 PUSH 25 CALL");
+var code = @"
+Max : [a, b] -> (a > b) ? a : b; 
+Min : [a, b] -> (a < b) ? a : b; 
+Sum : [a, b] -> (a = b) ? b : (a + Sum(a + 1, b)); 
+Main: Sum(Min(23, 69), Max(23, 69));
+";
 
-            VirtualMachine vm = new(mn);
+Parsers.ParseCompilationUnit(code, out var function);
+byte[] bytes = Compilers.Compile(function);
 
-            vm.Execute();
+VirtualMachine vm = new(bytes);
 
-            vm.Logger();
+vm.Execute();
 
-            List<Function> list = Parse.ParseFunctions("Main: \nAdd 5, 7;  \nAdd: x, y -> x + y;\nSub: x, y -> x - y\nSome_gibberish: x, y, z -> x + y - z * z");
-
-            Console.WriteLine(Parse.ToByteCode("Main: \n\tAdd 5, 7\n\tSub 4, 9  \n\tAdd: x, y -> x + y;\nSub: x, y -> x - y\nSome_gibberish: x, y, z -> x + y - z * z"));
-
-            // PUSH 5 PUSH 7 CALL _ HALT ADD RET SUB RET 
-
-        }
-    }
-}
-
-/*
-Main: 
-    Add 5, 7
-    Sub 4, 9
-    
-Add: x, y -> x + y;
-SUB: x, y -> x - y;
-*/
-
+vm.Logger();

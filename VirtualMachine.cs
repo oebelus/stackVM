@@ -1,160 +1,162 @@
+using System.Numerics;
+
 class VirtualMachine(byte[] program)
 {
-    private readonly byte[] memory = new byte[1024];
-    private readonly Stack<byte> stack = new(1024);
-    private readonly Stack<byte[]> stackFrames = new(16);
-    private readonly Stack<byte> call_stack = new(16);
+    private readonly int[] memory = new int[1024];
+    private readonly Stack<int> stack = new(1024);
+    private readonly Stack<int[]> stackFrames = new(1024);
+    private readonly Stack<int> call_stack = new(1024);
     private readonly byte[] program = program;
-    private byte counter = 0;
+    private int counter = 0;
 
     public VirtualMachine Execute()
     {
-        byte operand_1;
-        byte operand_2;
+        int operand_1;
+        int operand_2;
 
         while (counter < program.Length)
         {
-            byte instruction = program[counter];
+            var instruction = (Opcodes)program[counter];
 
-            switch ((Instructions)instruction)
+            switch (instruction)
             {
-                case Instructions.PUSH:
+                case Opcodes.PUSH:
                     byte result = Utils.ToUint32(program.Skip(counter + 1).Take(4).ToArray());
                     stack.Push(result);
                     counter += 5;
                     break;
 
-                case Instructions.POP:
+                case Opcodes.POP:
                     counter++;
                     break;
 
-                case Instructions.ADD:
+                case Opcodes.ADD:
                     operand_1 = stack.Pop();
                     operand_2 = stack.Pop();
 
-                    stack.Push((byte)(operand_1 + operand_2));
+                    stack.Push(operand_1 + operand_2);
                     counter++;
                     break;
 
-                case Instructions.SUB:
+                case Opcodes.SUB:
                     operand_1 = stack.Pop();
                     operand_2 = stack.Pop();
 
-                    stack.Push((byte)(operand_1 - operand_2));
+                    stack.Push((operand_1 - operand_2));
                     counter++;
                     break;
 
-                case Instructions.DIV:
+                case Opcodes.DIV:
                     operand_1 = stack.Pop();
                     operand_2 = stack.Pop();
 
-                    stack.Push((byte)(operand_1 / operand_2));
+                    stack.Push((operand_1 / operand_2));
                     counter++;
                     break;
 
-                case Instructions.MUL:
+                case Opcodes.MUL:
                     operand_1 = stack.Pop();
                     operand_2 = stack.Pop();
 
-                    stack.Push((byte)(operand_1 * operand_2));
+                    stack.Push((operand_1 * operand_2));
                     counter++;
                     break;
 
-                case Instructions.MOD:
+                case Opcodes.MOD:
                     operand_1 = stack.Pop();
                     operand_2 = stack.Pop();
 
-                    stack.Push((byte)(operand_1 % operand_2));
+                    stack.Push((operand_1 % operand_2));
                     counter++;
                     break;
 
-                case Instructions.EXP:
+                case Opcodes.EXP:
                     operand_1 = stack.Pop();
                     operand_2 = stack.Pop();
 
-                    stack.Push((byte)Math.Pow(operand_1, operand_2));
+                    stack.Push((int)Math.Pow(operand_1, operand_2));
                     counter++;
                     break;
 
-                case Instructions.LT:
+                case Opcodes.LT:
                     operand_1 = stack.Pop();
                     operand_2 = stack.Pop();
 
-                    stack.Push((byte)(operand_1 < operand_2 ? 1 : 0));
+                    stack.Push((operand_1 < operand_2 ? 1 : 0));
                     counter++;
                     break;
 
-                case Instructions.GT:
+                case Opcodes.GT:
                     operand_1 = stack.Pop();
                     operand_2 = stack.Pop();
 
-                    stack.Push((byte)(operand_1 > operand_2 ? 1 : 0));
+                    stack.Push((operand_1 > operand_2 ? 1 : 0));
                     counter++;
                     break;
 
-                case Instructions.EQ:
+                case Opcodes.EQ:
                     operand_1 = stack.Pop();
                     operand_2 = stack.Pop();
 
-                    stack.Push((byte)(operand_1 == operand_2 ? 1 : 0));
+                    stack.Push((operand_1 == operand_2 ? 1 : 0));
                     counter++;
                     break;
 
-                case Instructions.NEG:
-                    stack.Push((byte)-stack.Pop());
+                case Opcodes.NEG:
+                    stack.Push(-stack.Pop());
                     counter++;
                     break;
 
-                case Instructions.NOT:
-                    stack.Push((byte)~stack.Pop());
+                case Opcodes.NOT:
+                    stack.Push(~stack.Pop());
                     counter++;
                     break;
 
-                case Instructions.OR:
+                case Opcodes.OR:
                     operand_1 = stack.Pop();
                     operand_2 = stack.Pop();
 
-                    stack.Push((byte)(operand_1 | operand_2));
+                    stack.Push((operand_1 | operand_2));
                     counter++;
                     break;
 
-                case Instructions.AND:
+                case Opcodes.AND:
                     operand_1 = stack.Pop();
                     operand_2 = stack.Pop();
 
-                    stack.Push((byte)(operand_1 & operand_2));
+                    stack.Push((operand_1 & operand_2));
                     counter++;
                     break;
 
-                case Instructions.LS:
+                case Opcodes.LS:
                     operand_1 = stack.Pop();
                     operand_2 = stack.Pop();
 
-                    stack.Push((byte)(operand_1 << operand_2));
+                    stack.Push((operand_1 << operand_2));
                     counter++;
                     break;
 
-                case Instructions.RS:
+                case Opcodes.RS:
                     operand_1 = stack.Pop();
                     operand_2 = stack.Pop();
 
-                    stack.Push((byte)(operand_1 << operand_2));
+                    stack.Push((operand_1 << operand_2));
                     counter++;
                     break;
 
-                case Instructions.LOAD:
-                    byte index = stack.Pop();
+                case Opcodes.LOAD:
+                    int index = stack.Pop();
 
-                    byte[] arr = stackFrames.Pook();
+                    int[] arr = stackFrames.Pook();
 
                     stack.Push(arr[index]);
 
                     counter++;
                     break;
 
-                case Instructions.STORE:
+                case Opcodes.STORE:
                     index = stack.Pop();
-                    byte val = stack.Pop();
+                    int val = stack.Pop();
 
                     arr = stackFrames.Pook();
 
@@ -164,7 +166,7 @@ class VirtualMachine(byte[] program)
                     break;
 
 
-                case Instructions.GLOAD:
+                case Opcodes.GLOAD:
                     index = stack.Pop();
                     val = memory[index];
 
@@ -172,7 +174,7 @@ class VirtualMachine(byte[] program)
                     counter++;
                     break;
 
-                case Instructions.GSTORE:
+                case Opcodes.GSTORE:
                     index = stack.Pop();
                     val = stack.Pop();
 
@@ -180,36 +182,36 @@ class VirtualMachine(byte[] program)
                     counter++;
                     break;
 
-                case Instructions.JUMP:
-                    byte destination = stack.Pop();
+                case Opcodes.JUMP:
+                    int destination = stack.Pop();
 
                     counter = destination;
                     break;
 
-                case Instructions.CJUMP:
-                    byte condition = stack.Pop();
+                case Opcodes.CJUMP:
+                    int condition = stack.Pop();
                     destination = stack.Pop();
 
-                    counter = (byte)(condition != 0 ? destination : counter + 1);
+                    counter = condition != 0 ? destination : (int)(counter + 1);
                     break;
 
-                case Instructions.CALL:
+                case Opcodes.CALL:
 
-                    call_stack.Push((byte)(counter + 5));
-                    stackFrames.Push(new byte[32]);
+                    call_stack.Push((int)(counter + 5));
+                    stackFrames.Push(new int[32]);
                     destination = Utils.ToUint32(program.Skip(counter + 1).Take(4).ToArray());
 
                     counter = destination;
                     break;
 
-                case Instructions.RET:
+                case Opcodes.RET:
                     index = call_stack.Pop();
                     stackFrames.Pop();
                     counter = index;
                     break;
 
-                case Instructions.HALT:
-                    counter = (byte)program.Length;
+                case Opcodes.HALT:
+                    counter = program.Length;
                     break;
             }
         }
@@ -237,19 +239,24 @@ class VirtualMachine(byte[] program)
 
         Console.Write("]\n\n");
 
-        if (stackFrames.head > 0)
+        Console.Write("STACK FRAME:\n\n[\n");
+
+        for(int i = 0; i < stackFrames.head; i++)
         {
-            Console.Write("STACK FRAME:\n\n[ ");
+            Console.Write("[ ");
+            for(int j = 0; j < 32; j++)
+            {
+                Console.Write(stackFrames.ElementAt(i)[j] + " ");
+            }
+            Console.Write("]\n");
 
-            var el = stackFrames.ElementAt(0);
-
-            foreach (var item in el)
-                Console.Write(item + " ");
-
-            Console.Write("]\n\n");
-
-            Console.WriteLine($"Frame Pointer: {stackFrames.head}\n");
         }
+
+
+
+        Console.Write("]\n\n");
+
+        Console.WriteLine($"Frame Pointer: {stackFrames.head}\n");
 
         Console.Write("PROGRAM:\n\n[ ");
 
