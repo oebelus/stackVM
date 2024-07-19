@@ -1,44 +1,17 @@
-﻿namespace vm
-{
-    class Program
-    {
-        public static void Main()
-        {
-            // byte[] program = [0x0, 0x0, 0x0, 0x0, 0x5,
-            // 0x0, 0x0, 0x0, 0x0, 0x5,
-            // 0x18, 0x0, 0x0, 0x0, 0x1A,
-            // 0x0, 0x0, 0x0, 0x0, 0x0B,
-            // 0x18, 0x0, 0x0, 0x0, 0x1B,
-            // 0x1A,
-            // 0x02,
-            // 0x19,
-            // 0x03,
-            // 0x19,
-            // ];
+﻿using iLang.Parser;
 
-            var mn = Mnemonics.Mnemonic("PUSH 0x5 PUSH 0x2 STORE");
+var code = @"
+Max : [a, b] -> (a > b) ? a : b; 
+Min : [a, b] -> (a < b) ? a : b; 
+Sum : [a, b] -> (a = b) ? b : (a + Sum(a + 1, b)); 
+Main: Sum(Min(23, 69), Max(23, 69));
+";
 
-            VirtualMachine vm = new(mn);
+Parsers.ParseCompilationUnit(code, out var function);
+byte[] bytes = Compilers.Compile(function);
 
-            vm.Execute();
+VirtualMachine vm = new(bytes);
 
-            vm.Logger();
+vm.Execute();
 
-            List<string> list = Parse.ParseFunction("Main: \nAdd 5, 7  \nAdd: x, y -> x + y;");
-
-            foreach (var val in list)
-            {
-                Console.WriteLine(val);
-            }
-
-        }
-    }
-}
-
-/*
-Main: 
-    Add 5, 7;
-    
-Add: x, y -> x + y;
-*/
-
+vm.Logger();

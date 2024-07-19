@@ -1,4 +1,4 @@
-enum Instructions : byte
+enum Opcodes : byte
 {
     PUSH,
     POP,
