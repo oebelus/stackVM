@@ -12,6 +12,9 @@ class VirtualMachine(byte[] program)
         int operand_1;
         int operand_2;
 
+        // for testing purposes, should be removed later; 
+        stackFrames.Push(new int[6]);
+
         while (counter < program.Length)
         {
             byte instruction = program[counter];

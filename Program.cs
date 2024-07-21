@@ -33,8 +33,21 @@
 
             // var mne = Mnemonics.Mnemonic(program);
 
-            var mn = Mnemonics.Mnemonic("PUSH 5 PUSH 7 EQ PUSH 22 CJUMP PUSH 0 PUSH 1 HALT");
+            // max of 4 8
 
+            var mn = Mnemonics.Mnemonic("PUSH 4 PUSH 8 CALL <func> HALT </func> PUSH 0 STORE PUSH 1 STORE PUSH 0 LOAD PUSH 1 LOAD GT PUSH 48 CJUMP PUSH 0 LOAD RET PUSH 1 LOAD HALT RET");
+
+            string str = "PUSH 4 PUSH 0 STORE PUSH 8 PUSH 1 STORE PUSH 0 LOAD PUSH 1 LOAD GT PUSH 54 CJUMP PUSH 0 LOAD HALT";
+            string[] index = str.Split(' ');
+            int inc = 0;
+
+            for (int i = 0; i < index.Length; i++) {
+                if (int.TryParse(index[i], out _)) inc += 4;
+                else inc += 1;
+            }
+
+            Console.WriteLine(inc);
+            
             VirtualMachine vm = new(mn);
 
             vm.Execute();
@@ -54,3 +67,9 @@ Add: x, y -> x + y;
 Sub: x, y -> x - y;
 */
 
+/* CODES:
+
+Equality: PUSH 5 PUSH 5 EQ PUSH 23 CJUMP PUSH 0 HALT PUSH 1 HALT
+Even: PUSH 2 PUSH 7 MOD PUSH 23 CJUMP PUSH 1 HALT PUSH 0 HALT
+
+*/
