@@ -8,4 +8,5 @@ class Function(char[] operations, int arguments, string name)
     {
         Console.Write($"Name: {Name}, Arguments: {Arguments}, Operations: {string.Join(' ', Operations)}\n");
     }
+
 }

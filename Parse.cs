@@ -1,7 +1,7 @@
 class Parse
 {
     readonly static string[] separators = ["->", ":"];
-    readonly static char[] binaryOperations = ['=', '-', '/', '*', '%', '/', '&', '|'];
+    readonly static char[] binaryOperations = ['=', '-', '+', '/', '*', '%', '/', '&', '|'];
 
     public static List<Function> ParseFunctions(string str)
     {
@@ -62,13 +62,21 @@ class Parse
         string bytecode = "";
         List<Function> functions = ParseFunctions(code);
 
-        int index = code.IndexOf("Main") + 5;
-        string[] arr = code.Split("\n\t");
-        string[] mainBody = arr[1..(arr.Length - 1)];
+        int index = code.IndexOf("Main");
+        int endOfMain = code[(index + 6)..].IndexOf(':');
+        
+        string[] arr = code[(index + 5 + 2)..(endOfMain + index + 2)].Split('\n');
 
-        foreach (var item in mainBody)
+        foreach (var item in arr)
         {
-            string[] init = item.Split(' ');
+            Console.WriteLine("item" + item);
+        }
+        
+        string[] mainBody = functions.Count > 1 ? arr[1..(functions.Count - 1)] : arr[1..(arr.Length - 1)];
+        
+        foreach (var item in arr)
+        {
+            string[] init = item.Trim().Split(" ");
 
             if (init.Length > 0)
             {
@@ -85,10 +93,23 @@ class Parse
                     {
                         bytecode += " PUSH " + op.Trim();
                     }
-                    bytecode += " CALL " + function.Name.Trim();
+                    bytecode += " CALL " + "<" + function.Name.Trim().ToLower() + ">";
                 }
             }
 
+        }
+
+        bytecode = bytecode.Trim() + " HALT";
+
+        foreach (var function in functions)
+        {
+            bytecode += " </" + function.Name.ToLower() + "> ";
+            function.Print();
+            foreach (var op in function.Operations)
+            {
+                bytecode += Tokens.Operations[op] + " ";
+            }
+            bytecode += "RET";
         }
 
         return bytecode.Trim();

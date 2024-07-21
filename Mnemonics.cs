@@ -21,25 +21,26 @@ class Mnemonics
                 if (!functions.ContainsKey(function))
                 {
                     if (val[1] == '/') continue;
-                    int k = i;
+                    int k = i + 1;
                     int inc = 0;
-
-                    while (k < arr.Length && arr[k][2..] != val[1..])
+                    
+                    while (k < length/* && val.Length > 1 && arr[k][2..] != val[1..]*/)
                     {
-                        if (Instruction.instruction.ContainsKey(arr[k]))
+                        if (Instruction.instruction.ContainsKey(arr[k].Trim()))
                         {
                             inc += 1;
-                            // Console.WriteLine($"{arr[k]}, {inc}");
+                            // Console.WriteLine($"{arr[k]}, {inc}, {k}");
                         }
-                        else if (arr[k][1] == '/')
-                        {
-                            inc += 0;
-                            // Console.WriteLine($"{arr[k]}, {inc}");
+                        else if (arr[k].Length > 1 && !int.TryParse(arr[k], out _)) {
+                            if (arr[k][1] == '/') {
+                                inc += 0;
+                                // Console.WriteLine($"{arr[k]}, {inc}, {k}");
+                            }
                         }
                         else
                         {
                             inc += 4;
-                            // Console.WriteLine($"{arr[k]}, {inc}");
+                            // Console.WriteLine($"{arr[k]}, {inc}, {k}");
                         }
                         k++;
                     }
