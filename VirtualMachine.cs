@@ -1,16 +1,16 @@
 class VirtualMachine(byte[] program)
 {
-    private readonly byte[] memory = new byte[1024];
-    private readonly Stack<byte> stack = new(1024);
-    private readonly Stack<byte[]> stackFrames = new(16);
-    private readonly Stack<byte> call_stack = new(16);
+    private readonly int[] memory = new int[1024];
+    private readonly Stack<int> stack = new(1024);
+    private readonly Stack<int[]> stackFrames = new(16);
+    private readonly Stack<int> call_stack = new(16);
     private readonly byte[] program = program;
-    private byte counter = 0;
+    private int counter = 0;
 
     public VirtualMachine Execute()
     {
-        byte operand_1;
-        byte operand_2;
+        int operand_1;
+        int operand_2;
 
         while (counter < program.Length)
         {
@@ -19,7 +19,7 @@ class VirtualMachine(byte[] program)
             switch ((Instructions)instruction)
             {
                 case Instructions.PUSH:
-                    byte result = Utils.ToUint32(program.Skip(counter + 1).Take(4).ToArray());
+                    int result = Utils.ToUint32(program.Skip(counter + 1).Take(4).ToArray());
                     stack.Push(result);
                     counter += 5;
                     break;
@@ -32,7 +32,7 @@ class VirtualMachine(byte[] program)
                     operand_1 = stack.Pop();
                     operand_2 = stack.Pop();
 
-                    stack.Push((byte)(operand_1 + operand_2));
+                    stack.Push(operand_1 + operand_2);
                     counter++;
                     break;
 
@@ -40,7 +40,7 @@ class VirtualMachine(byte[] program)
                     operand_1 = stack.Pop();
                     operand_2 = stack.Pop();
 
-                    stack.Push((byte)(operand_1 - operand_2));
+                    stack.Push(operand_1 - operand_2);
                     counter++;
                     break;
 
@@ -48,7 +48,7 @@ class VirtualMachine(byte[] program)
                     operand_1 = stack.Pop();
                     operand_2 = stack.Pop();
 
-                    stack.Push((byte)(operand_1 / operand_2));
+                    stack.Push(operand_1 / operand_2);
                     counter++;
                     break;
 
@@ -56,7 +56,7 @@ class VirtualMachine(byte[] program)
                     operand_1 = stack.Pop();
                     operand_2 = stack.Pop();
 
-                    stack.Push((byte)(operand_1 * operand_2));
+                    stack.Push(operand_1 * operand_2);
                     counter++;
                     break;
 
@@ -64,7 +64,7 @@ class VirtualMachine(byte[] program)
                     operand_1 = stack.Pop();
                     operand_2 = stack.Pop();
 
-                    stack.Push((byte)(operand_1 % operand_2));
+                    stack.Push(operand_1 % operand_2);
                     counter++;
                     break;
 
@@ -72,7 +72,7 @@ class VirtualMachine(byte[] program)
                     operand_1 = stack.Pop();
                     operand_2 = stack.Pop();
 
-                    stack.Push((byte)Math.Pow(operand_1, operand_2));
+                    stack.Push((int)Math.Pow(operand_1, operand_2));
                     counter++;
                     break;
 
@@ -80,7 +80,7 @@ class VirtualMachine(byte[] program)
                     operand_1 = stack.Pop();
                     operand_2 = stack.Pop();
 
-                    stack.Push((byte)(operand_1 < operand_2 ? 1 : 0));
+                    stack.Push(operand_1 < operand_2 ? 1 : 0);
                     counter++;
                     break;
 
@@ -88,7 +88,7 @@ class VirtualMachine(byte[] program)
                     operand_1 = stack.Pop();
                     operand_2 = stack.Pop();
 
-                    stack.Push((byte)(operand_1 > operand_2 ? 1 : 0));
+                    stack.Push(operand_1 > operand_2 ? 1 : 0);
                     counter++;
                     break;
 
@@ -96,17 +96,17 @@ class VirtualMachine(byte[] program)
                     operand_1 = stack.Pop();
                     operand_2 = stack.Pop();
 
-                    stack.Push((byte)(operand_1 == operand_2 ? 1 : 0));
+                    stack.Push(operand_1 == operand_2 ? 1 : 0);
                     counter++;
                     break;
 
                 case Instructions.NEG:
-                    stack.Push((byte)-stack.Pop());
+                    stack.Push(-stack.Pop());
                     counter++;
                     break;
 
                 case Instructions.NOT:
-                    stack.Push((byte)~stack.Pop());
+                    stack.Push(~stack.Pop());
                     counter++;
                     break;
 
@@ -114,7 +114,7 @@ class VirtualMachine(byte[] program)
                     operand_1 = stack.Pop();
                     operand_2 = stack.Pop();
 
-                    stack.Push((byte)(operand_1 | operand_2));
+                    stack.Push(operand_1 | operand_2);
                     counter++;
                     break;
 
@@ -122,7 +122,7 @@ class VirtualMachine(byte[] program)
                     operand_1 = stack.Pop();
                     operand_2 = stack.Pop();
 
-                    stack.Push((byte)(operand_1 & operand_2));
+                    stack.Push(operand_1 & operand_2);
                     counter++;
                     break;
 
@@ -130,7 +130,7 @@ class VirtualMachine(byte[] program)
                     operand_1 = stack.Pop();
                     operand_2 = stack.Pop();
 
-                    stack.Push((byte)(operand_1 << operand_2));
+                    stack.Push(operand_1 << operand_2);
                     counter++;
                     break;
 
@@ -138,14 +138,14 @@ class VirtualMachine(byte[] program)
                     operand_1 = stack.Pop();
                     operand_2 = stack.Pop();
 
-                    stack.Push((byte)(operand_1 << operand_2));
+                    stack.Push(operand_1 << operand_2);
                     counter++;
                     break;
 
                 case Instructions.LOAD:
-                    byte index = stack.Pop();
+                    int index = stack.Pop();
 
-                    byte[] arr = stackFrames.Pook();
+                    int[] arr = stackFrames.Pook();
 
                     stack.Push(arr[index]);
 
@@ -154,7 +154,7 @@ class VirtualMachine(byte[] program)
 
                 case Instructions.STORE:
                     index = stack.Pop();
-                    byte val = stack.Pop();
+                    int val = stack.Pop();
 
                     arr = stackFrames.Pook();
 
@@ -181,22 +181,25 @@ class VirtualMachine(byte[] program)
                     break;
 
                 case Instructions.JUMP:
-                    byte destination = stack.Pop();
+                    int destination = stack.Pop();
 
                     counter = destination;
                     break;
 
                 case Instructions.CJUMP:
-                    byte condition = stack.Pop();
                     destination = stack.Pop();
+                    int condition = stack.Pop();
 
-                    counter = (byte)(condition != 0 ? destination : counter + 1);
+                    Console.WriteLine("destination: " + destination);
+                    Console.WriteLine("condition: " + condition);
+
+                    counter = condition != 0 ? destination : counter + 1;
                     break;
 
                 case Instructions.CALL:
 
-                    call_stack.Push((byte)(counter + 5));
-                    stackFrames.Push(new byte[32]);
+                    call_stack.Push(counter + 5);
+                    stackFrames.Push(new int[32]);
                     destination = Utils.ToUint32(program.Skip(counter + 1).Take(4).ToArray());
 
                     counter = destination;
@@ -209,7 +212,7 @@ class VirtualMachine(byte[] program)
                     break;
 
                 case Instructions.HALT:
-                    counter = (byte)program.Length;
+                    counter = program.Length;
                     break;
             }
         }
