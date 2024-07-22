@@ -10,6 +10,7 @@ class Mnemonics
         for (int i = 0; i < length; i++)
         {
             var val = arr[i];
+
             if (Instruction.instruction.TryGetValue(val, out int value))
             {
                 buffer.Add((byte)value);
@@ -21,9 +22,9 @@ class Mnemonics
                 if (!functions.ContainsKey(function))
                 {
                     if (val[1] == '/') continue;
-                    int k = i + 1;
+                    int k = i;
                     int inc = 0;
-                    
+
                     while (k < length/* && val.Length > 1 && arr[k][2..] != val[1..]*/)
                     {
                         if (Instruction.instruction.ContainsKey(arr[k].Trim()))
@@ -31,11 +32,14 @@ class Mnemonics
                             inc += 1;
                             // Console.WriteLine($"{arr[k]}, {inc}, {k}");
                         }
-                        else if (arr[k].Length > 1 && !int.TryParse(arr[k], out _)) {
-                            if (arr[k][1] == '/') {
-                                inc += 0;
+                        else if (arr[k].Length > 1 && !int.TryParse(arr[k], out _))
+                        {
+                            if (arr[k][2..] != val[1..] && !arr[k].StartsWith("</"))
+                            {
+                                inc += 4;
                                 // Console.WriteLine($"{arr[k]}, {inc}, {k}");
                             }
+                            else break;
                         }
                         else
                         {
@@ -45,7 +49,7 @@ class Mnemonics
                         k++;
                     }
 
-                    functions.Add(function, inc + buffer.Count - functions.Count);
+                    functions.Add(function, inc + buffer.Count);
                 }
 
                 string index = Utils.NumberToHex(functions[function].ToString());

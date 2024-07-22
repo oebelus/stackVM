@@ -12,9 +12,6 @@ class VirtualMachine(byte[] program)
         int operand_1;
         int operand_2;
 
-        // for testing purposes, should be removed later; 
-        stackFrames.Push(new int[6]);
-
         while (counter < program.Length)
         {
             byte instruction = program[counter];
@@ -193,14 +190,12 @@ class VirtualMachine(byte[] program)
                     destination = stack.Pop();
                     int condition = stack.Pop();
 
-                    Console.WriteLine("destination: " + destination);
-                    Console.WriteLine("condition: " + condition);
+                    Console.WriteLine("destination " + destination + " " + string.Join(' ', program[destination..]));
 
                     counter = condition != 0 ? destination : counter + 1;
                     break;
 
                 case Instructions.CALL:
-
                     call_stack.Push(counter + 5);
                     stackFrames.Push(new int[32]);
                     destination = Utils.ToUint32(program.Skip(counter + 1).Take(4).ToArray());
@@ -212,6 +207,7 @@ class VirtualMachine(byte[] program)
                     index = call_stack.Pop();
                     stackFrames.Pop();
                     counter = index;
+                    Console.WriteLine("counter " + counter + " " + program[counter]);
                     break;
 
                 case Instructions.HALT:
@@ -254,7 +250,7 @@ class VirtualMachine(byte[] program)
 
             Console.Write("]\n\n");
 
-            Console.WriteLine($"Frame Pointer: {stackFrames.head}\n");
+            Console.WriteLine($"Frame Pointer: {stackFrames.head}, length: {stackFrames.Length()}\n");
         }
 
         Console.Write("PROGRAM:\n\n[ ");

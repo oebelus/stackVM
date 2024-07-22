@@ -16,12 +16,12 @@
 
             // vm.Logger();
 
-//             string code = @"Main:
-//     Add 5, 7
-//     Sub 4, 8
-// Add: x, y -> x + y
-// Sub: x, y -> x - y
-//             ";
+            //             string code = @"Main:
+            //     Add 5, 7
+            //     Sub 4, 8
+            // Add: x, y -> x + y
+            // Sub: x, y -> x - y
+            //             ";
 
             // List<Function> list = Parse.ParseFunctions("Main: \n  \nAdd: x, y -> x + y;");
 
@@ -35,19 +35,23 @@
 
             // max of 4 8
 
-            var mn = Mnemonics.Mnemonic("PUSH 4 PUSH 8 CALL <func> HALT </func> PUSH 0 STORE PUSH 1 STORE PUSH 0 LOAD PUSH 1 LOAD GT PUSH 48 CJUMP PUSH 0 LOAD RET PUSH 1 LOAD HALT RET");
+            var mn = Mnemonics.Mnemonic("PUSH 4 PUSH 8 CALL <func> HALT </func> PUSH 0 STORE PUSH 1 STORE PUSH 0 LOAD PUSH 1 LOAD GT PUSH 54 CJUMP PUSH 0 LOAD RET PUSH 1 LOAD HALT RET");
 
-            string str = "PUSH 4 PUSH 0 STORE PUSH 8 PUSH 1 STORE PUSH 0 LOAD PUSH 1 LOAD GT PUSH 54 CJUMP PUSH 0 LOAD HALT";
+            string str = "PUSH 4 PUSH 8 CALL <func> HALT </func> PUSH 0 STORE PUSH 1 STORE PUSH 0 LOAD PUSH 1 LOAD GT PUSH 53 CJUMP PUSH 0 LOAD RET";
             string[] index = str.Split(' ');
             int inc = 0;
 
-            for (int i = 0; i < index.Length; i++) {
+            for (int i = 0; i < index.Length; i++)
+            {
                 if (int.TryParse(index[i], out _)) inc += 4;
-                else inc += 1;
+                else
+                {
+                    if (index[i].StartsWith("</")) inc += 4;
+                    else inc += 1;
+                }
             }
-
             Console.WriteLine(inc);
-            
+
             VirtualMachine vm = new(mn);
 
             vm.Execute();
