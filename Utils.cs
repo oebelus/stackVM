@@ -1,18 +1,29 @@
 class Utils
 {
-    public static byte ToUint32(byte[] arr)
+    public static int ToUint32(byte[] arr)
     {
         if (BitConverter.IsLittleEndian)
             Array.Reverse(arr);
 
-        return (byte)BitConverter.ToUInt32(arr, 0);
+        return (int)BitConverter.ToUInt32(arr, 0);
     }
 
-    public static string NumberToHex(string nbr)
+    public static byte[] ToByteArray(string str)
     {
-        int opp = 8 - nbr.Length;
-        string hex = string.Concat(Enumerable.Repeat('0', opp)) + nbr;
+        int nbr = int.Parse(str);
+        Console.WriteLine(nbr);
 
-        return hex;
+        byte[] nbrArray = BitConverter.GetBytes(nbr);
+        foreach (var item in nbrArray)
+        {
+            Console.WriteLine(item);
+        }
+
+        if (BitConverter.IsLittleEndian)
+        {
+            Array.Reverse(nbrArray);
+        }
+
+        return nbrArray;
     }
 }

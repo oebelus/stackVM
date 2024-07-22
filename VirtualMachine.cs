@@ -190,8 +190,6 @@ class VirtualMachine(byte[] program)
                     destination = stack.Pop();
                     int condition = stack.Pop();
 
-                    Console.WriteLine("destination " + destination + " " + string.Join(' ', program[destination..]));
-
                     counter = condition != 0 ? destination : counter + 1;
                     break;
 
@@ -207,7 +205,7 @@ class VirtualMachine(byte[] program)
                     index = call_stack.Pop();
                     stackFrames.Pop();
                     counter = index;
-                    Console.WriteLine("counter " + counter + " " + program[counter]);
+
                     break;
 
                 case Instructions.HALT:

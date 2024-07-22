@@ -52,28 +52,20 @@ class Mnemonics
                     functions.Add(function, inc + buffer.Count);
                 }
 
-                string index = Utils.NumberToHex(functions[function].ToString());
-                int z = 0;
-                while (z < 8)
+                byte[] nbrArray = Utils.ToByteArray(arr[i]);
+
+                foreach (var item in nbrArray)
                 {
-                    buffer.Add((byte)int.Parse(index.Substring(z, 2)));
-                    z += 2;
+                    buffer.Add(item);
                 }
             }
             else
             {
-                string[] c = arr[i].Split("x");
-                if (c.Length > 0)
-                {
-                    string nbr = c.Length == 1 ? c[0] : c[1];
-                    string hex = Utils.NumberToHex(nbr);
+                byte[] nbrArray = Utils.ToByteArray(arr[i]);
 
-                    int j = 0;
-                    while (j < 8)
-                    {
-                        buffer.Add((byte)int.Parse(hex.Substring(j, 2)));
-                        j += 2;
-                    }
+                foreach (var item in nbrArray)
+                {
+                    buffer.Add(item);
                 }
             }
         }
