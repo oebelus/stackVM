@@ -64,16 +64,16 @@ class Parse
 
         int index = code.IndexOf("Main");
         int endOfMain = code[(index + 6)..].IndexOf(':');
-        
+
         string[] arr = code[(index + 5 + 2)..(endOfMain + index + 2)].Split('\n');
 
         foreach (var item in arr)
         {
             Console.WriteLine("item" + item);
         }
-        
+
         string[] mainBody = functions.Count > 1 ? arr[1..(functions.Count - 1)] : arr[1..(arr.Length - 1)];
-        
+
         foreach (var item in arr)
         {
             string[] init = item.Trim().Split(" ");
@@ -107,7 +107,7 @@ class Parse
             function.Print();
             foreach (var op in function.Operations)
             {
-                bytecode += Tokens.Operations[op] + " ";
+                bytecode += Token.Operations[op] + " ";
             }
             bytecode += "RET";
         }
