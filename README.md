@@ -13,7 +13,7 @@ byte[] program = [0, 0, 0, 0, 5, // PUSH 5
 ];
 ```
 
-Or like this:
+> Or like this:
 
 ```c#
 string program = "PUSH 5 PUSH 7 CALL <add> PUSH 4 PUSH 8 CALL <sub> HALT </add> ADD RET </sub> SUB RET"
