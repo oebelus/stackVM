@@ -8,9 +8,9 @@
             0, 0, 0, 0, 25,
             ];
 
-            var mn = Mnemonics.Mnemonic("PUSH 5 PUSH 7 CALL <add> PUSH 4 PUSH 8 CALL <sub> HALT </add> ADD RET </sub> SUB RET");
+            // var mn = Mnemonics.Mnemonic("PUSH 5 PUSH 7 CALL <add> PUSH 4 PUSH 8 CALL <sub> HALT </add> ADD RET </sub> SUB RET");
 
-            VirtualMachine vm = new(mn);
+            VirtualMachine vm = new(program);
 
             vm.Execute();
 
