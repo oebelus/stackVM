@@ -1,4 +1,4 @@
-enum Instructions : byte
+public enum Instructions : byte
 {
     PUSH,
     POP,

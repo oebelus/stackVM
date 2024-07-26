@@ -1,4 +1,4 @@
-class VirtualMachine(byte[] program)
+public class VirtualMachine(byte[] program)
 {
     private readonly int[] memory = new int[1024];
     private readonly Stack<int> stack = new(1024);
