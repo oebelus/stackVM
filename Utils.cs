@@ -11,13 +11,8 @@ class Utils
     public static byte[] ToByteArray(string str)
     {
         int nbr = int.Parse(str);
-        Console.WriteLine(nbr);
 
         byte[] nbrArray = BitConverter.GetBytes(nbr);
-        foreach (var item in nbrArray)
-        {
-            Console.WriteLine(item);
-        }
 
         if (BitConverter.IsLittleEndian)
         {

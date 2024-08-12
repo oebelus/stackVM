@@ -1,4 +1,4 @@
-public class VirtualMachine(byte[] program)
+class VirtualMachine(byte[] program)
 {
     private readonly int[] memory = new int[1024];
     private readonly Stack<int> stack = new(1024);
@@ -11,6 +11,8 @@ public class VirtualMachine(byte[] program)
     {
         int operand_1;
         int operand_2;
+
+        stackFrames.Push(new int[32]);
 
         while (counter < program.Length)
         {
@@ -202,9 +204,16 @@ public class VirtualMachine(byte[] program)
                     break;
 
                 case Instructions.RET:
-                    index = call_stack.Pop();
-                    stackFrames.Pop();
-                    counter = index;
+                    try
+                    {
+                        index = call_stack.Pop();
+                        stackFrames.Pop();
+                        counter = index;
+                    }
+                    catch (Exception)
+                    {
+                        counter = program.Length;
+                    }
 
                     break;
 

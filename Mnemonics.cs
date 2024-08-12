@@ -22,7 +22,7 @@ class Mnemonics
                 if (!functions.ContainsKey(function))
                 {
                     if (val[1] == '/') continue;
-                    int k = i;
+                    int k = i + 1;
                     int inc = 0;
 
                     while (k < length/* && val.Length > 1 && arr[k][2..] != val[1..]*/)
@@ -39,7 +39,6 @@ class Mnemonics
                                 inc += 4;
                                 // Console.WriteLine($"{arr[k]}, {inc}, {k}");
                             }
-                            else break;
                         }
                         else
                         {
@@ -49,10 +48,11 @@ class Mnemonics
                         k++;
                     }
 
-                    functions.Add(function, inc + buffer.Count);
+                    functions.Add(function, inc + buffer.Count + 2);
                 }
 
-                byte[] nbrArray = Utils.ToByteArray(arr[i]);
+                // adding index
+                byte[] nbrArray = Utils.ToByteArray(functions[function].ToString());
 
                 foreach (var item in nbrArray)
                 {
