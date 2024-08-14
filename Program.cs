@@ -8,7 +8,37 @@
             0, 0, 0, 0, 25,
             ];
 
-            var mn = Mnemonics.Mnemonic("PUSH 10 PUSH 5 CALL <div> PUSH 7 PUSH 23 CALL <add> HALT </div> DIV RET </add> ADD RET"); // STORE PUSH 11 PUSH 0 LOAD AND STORE
+            var mn = Mnemonics.Mnemonic("PUSH 10 PUSH 10 EQ CJUMP <loc> PUSH 1 HALT loc: PUSH 0 HALT");
+
+            /*
+            PUSH 0
+            PUSH 1
+            JUMP ADDRESS
+            PUSH 23
+            PUSH 32
+            ADD 
+            ADDRESS: 
+            ADD
+            HALT
+            */
+
+            // PUSH 10 PUSH 10 EQ PUSH 23 CJUMP PUSH 1 HALT PUSH 0 HALT");
+
+            // PUSH 10 PUSH 5 CALL <div> PUSH 7 PUSH 23 CALL <add> HALT div: DIV RET add: ADD RET
+
+            foreach (var item in mn)
+            {
+                Console.Write(item + " ");
+            }
+
+            Console.WriteLine();
+
+            List<string> toMnemo = Utils.ByteCodeToMnemonics(mn);
+
+            foreach (var item in toMnemo)
+            {
+                Console.WriteLine(item);
+            }
 
             VirtualMachine vm = new(mn);
 
