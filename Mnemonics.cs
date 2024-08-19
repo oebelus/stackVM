@@ -1,14 +1,17 @@
 class Mnemonics
 {
-    public static Dictionary<string, int> MapAddress(string[] mnemonics) {
+    public static Dictionary<string, int> MapAddress(string[] mnemonics)
+    {
         Dictionary<string, int> addresses = [];
         int length = mnemonics.Length;
 
-        for (int i = 0; i < length; i++) {
-            if (mnemonics[i].StartsWith('<') && !addresses.ContainsKey(mnemonics[i][1..mnemonics[i].Length])) {
+        for (int i = 0; i < length; i++)
+        {
+            if (mnemonics[i].StartsWith('<') && !addresses.ContainsKey(mnemonics[i][1..mnemonics[i].Length]))
+            {
                 int index = GetIndex(mnemonics, mnemonics[i]);
 
-                addresses.TryAdd(mnemonics[i][1..(mnemonics[i].Length-1)], index);
+                addresses.TryAdd(mnemonics[i][1..(mnemonics[i].Length - 1)], index);
             }
         }
         return addresses;
@@ -32,8 +35,8 @@ class Mnemonics
             {
                 if (value == 23 || value == 22)
                 {
-                    Console.WriteLine(mnemonics[i+1][1..(mnemonics[i+1].Length - 2)]);
-                    byte[] nbrArray = Utils.ToByteArray(addresses[mnemonics[i+1][1..(mnemonics[i+1].Length - 1)]].ToString());
+                    Console.WriteLine(mnemonics[i + 1][1..(mnemonics[i + 1].Length - 2)]);
+                    byte[] nbrArray = Utils.ToByteArray(addresses[mnemonics[i + 1][1..(mnemonics[i + 1].Length - 1)]].ToString());
 
                     buffer.Add(0);
 
@@ -49,7 +52,7 @@ class Mnemonics
             }
             else if (val[0] == '<')
             {
-                int index = GetIndex(mnemonics, val[1..(val.Length-2)]);
+                int index = GetIndex(mnemonics, val[1..(val.Length - 2)]);
 
                 byte[] nbrArray = Utils.ToByteArray(index.ToString());
 
@@ -81,18 +84,19 @@ class Mnemonics
         int inc = 0;
         int length = mnemonics.Length;
 
-        for (int i = 0; i < length; i++) {
+        for (int i = 0; i < length; i++)
+        {
             string val = mnemonics[i];
 
-            Console.WriteLine("value: " + value + " mnemo: " + val);
-            if (val.Length > 1 && val.EndsWith(':') && val[..(val.Length-1)] == value[1..(value.Length-1)]) {
-                Console.WriteLine("HERE: " + value[1..(value.Length-1)]);
+            if (val.Length > 1 && val.EndsWith(':') && val[..(val.Length - 1)] == value[1..(value.Length - 1)])
+            {
                 return inc;
             }
 
             if (int.TryParse(val, out int _)) inc += 4;
-            else if (Instruction.instruction.ContainsKey(val.Trim())) {
-                if (val == "JUMP" || val == "CJUMP") inc += 5; 
+            else if (Instruction.instruction.ContainsKey(val.Trim()))
+            {
+                if (val == "JUMP" || val == "CJUMP") inc += 5;
                 if (val == "CALL") inc += 5;
                 else inc += 1;
             }
