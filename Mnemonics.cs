@@ -1,31 +1,39 @@
 class Mnemonics
 {
+    public static Dictionary<string, int> MapAddress(string[] mnemonics) {
+        Dictionary<string, int> addresses = [];
+        int length = mnemonics.Length;
+
+        for (int i = 0; i < length; i++) {
+            if (mnemonics[i].StartsWith('<') && !addresses.ContainsKey(mnemonics[i][1..mnemonics[i].Length])) {
+                int index = GetIndex(mnemonics, mnemonics[i]);
+
+                addresses.TryAdd(mnemonics[i][1..(mnemonics[i].Length-1)], index);
+            }
+        }
+        return addresses;
+    }
     public static byte[] Mnemonic(string mnemo)
     {
-        string[] arr = mnemo.Split(' ');
+        string[] mnemonics = mnemo.Split(' ');
+        Dictionary<string, int> addresses = MapAddress(mnemonics);
+        foreach (var (key, val) in addresses)
+        {
+            Console.WriteLine(key + " " + val);
+        }
         List<byte> buffer = [];
-        Dictionary<string, int> functions = [];
-        int length = arr.Length;
+        int length = mnemonics.Length;
 
         for (int i = 0; i < length; i++)
         {
-            var val = arr[i];
+            var val = mnemonics[i];
 
             if (Instruction.instruction.TryGetValue(val, out int value))
             {
                 if (value == 23 || value == 22)
                 {
-                    int inc = GetIndex(i + 1, length, arr, arr[i + 1]);
-                    int jumps = 1;
-                    int cjumps = 1;
-
-                    for (int j = i + 1; j < length; j++)
-                    {
-                        if (arr[j] == "JUMP") jumps++;
-                        else if (arr[j] == "CJUMP") cjumps++;
-                    }
-
-                    byte[] nbrArray = Utils.ToByteArray((inc + buffer.Count + jumps + 1).ToString()); // 1 for PUSH
+                    Console.WriteLine(mnemonics[i+1][1..(mnemonics[i+1].Length - 2)]);
+                    byte[] nbrArray = Utils.ToByteArray(addresses[mnemonics[i+1][1..(mnemonics[i+1].Length - 1)]].ToString());
 
                     buffer.Add(0);
 
@@ -41,18 +49,9 @@ class Mnemonics
             }
             else if (val[0] == '<')
             {
-                string function = val;
+                int index = GetIndex(mnemonics, val[1..(val.Length-2)]);
 
-                if (!functions.ContainsKey(function))
-                {
-                    if (val[1] == '/') continue;
-                    int k = i;
-                    int inc = GetIndex(k, length, arr, val);
-                    functions.Add(function, inc + buffer.Count);
-                }
-
-                // adding index
-                byte[] nbrArray = Utils.ToByteArray(functions[function].ToString());
+                byte[] nbrArray = Utils.ToByteArray(index.ToString());
 
                 foreach (var item in nbrArray)
                 {
@@ -65,7 +64,7 @@ class Mnemonics
             }
             else
             {
-                byte[] nbrArray = Utils.ToByteArray(arr[i]);
+                byte[] nbrArray = Utils.ToByteArray(mnemonics[i]);
 
                 foreach (var item in nbrArray)
                 {
@@ -77,37 +76,27 @@ class Mnemonics
         return [.. buffer];
     }
 
-    private static int GetIndex(int k, int length, string[] arr, string val)
+    private static int GetIndex(string[] mnemonics, string value)
     {
         int inc = 0;
+        int length = mnemonics.Length;
 
-        while (k < length/* && val.Length > 1 && arr[k][2..] != val[1..]*/)
-        {
-            if (Instruction.instruction.ContainsKey(arr[k].Trim()))
-            {
-                inc += 1;
-                // Console.WriteLine($"{arr[k]}, {inc}, {k}");
+        for (int i = 0; i < length; i++) {
+            string val = mnemonics[i];
+
+            Console.WriteLine("value: " + value + " mnemo: " + val);
+            if (val.Length > 1 && val.EndsWith(':') && val[..(val.Length-1)] == value[1..(value.Length-1)]) {
+                Console.WriteLine("HERE: " + value[1..(value.Length-1)]);
+                return inc;
             }
-            else if (arr[k].Length > 1 && !int.TryParse(arr[k], out _))
-            {
-                if (arr[k][2..] != val[1..] && !arr[k].EndsWith(':'))
-                {
-                    inc += 4;
-                    // Console.WriteLine($"{arr[k]}, {inc}, {k}");
-                }
-                else if (arr[k].EndsWith(':') && arr[k][0..(arr[k].Length - 2)] == val[1..(val.Length - 2)])
-                {
-                    break;
-                }
+
+            if (int.TryParse(val, out int _)) inc += 4;
+            else if (Instruction.instruction.ContainsKey(val.Trim())) {
+                if (val == "JUMP" || val == "CJUMP") inc += 5; 
+                if (val == "CALL") inc += 5;
+                else inc += 1;
             }
-            else
-            {
-                inc += 4;
-                // Console.WriteLine($"{arr[k]}, {inc}, {k}");
-            }
-            k++;
         }
-
-        return inc;
+        return -1;
     }
 }
