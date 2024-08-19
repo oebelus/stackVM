@@ -8,7 +8,7 @@
             0, 0, 0, 0, 25,
             ];
 
-            var mn = Mnemonics.Mnemonic("PUSH 10 PUSH 10 EQ CJUMP <loc> PUSH 1 HALT loc: PUSH 0 HALT");
+            var mn = Mnemonics.Mnemonic("PUSH 0 PUSH 0 GSTORE BOYCP: PUSH 0 GLOAD PUSH 100 LT PUSH 0 EQ CJUMP <XQ2ZK> PUSH 0 GLOAD PUSH 1 ADD PUSH 0 GSTORE CJUMP <BOYCP> XQ2ZK HALT");
 
             /*
             PUSH 0
