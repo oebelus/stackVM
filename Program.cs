@@ -8,7 +8,7 @@
             0, 0, 0, 0, 25,
             ];
 
-            var mn = Mnemonics.Mnemonic("PUSH 0 PUSH 0 GSTORE SP709: PUSH 0 GLOAD PUSH 100 LT PUSH 0 EQ CJUMP <DMMMV> PUSH 0 GLOAD PUSH 1 ADD PUSH 0 GSTORE JUMP <SP709> DMMMV: HALT");
+            var mn = Mnemonics.Mnemonic("PUSH 22 CALL <isPrime> HALT isPrime: PUSH 0 STORE PUSH 0 LOAD PUSH 2 LT CJUMP <L1YTS> PUSH 2 PUSH 1 STORE TKKLF: PUSH 1 LOAD PUSH 0 LOAD LT PUSH 0 EQ JUMP <MEV8Z> PUSH 0 LOAD PUSH 1 LOAD MOD PUSH 0 EQ CJUMP <L7EFO> NOP L7EFO: PUSH 0 RET JUMP <TT0VV> TT0VV: PUSH 1 LOAD PUSH 1 ADD PUSH 1 STORE JUMP <TKKLF> MEV8Z: JUMP <9247R> L1YTS: PUSH 0 RET JUMP <9247R> 9247R: PUSH 1 RET");
 
             /*
             PUSH 0
@@ -21,15 +21,6 @@
             ADD
             HALT
             */
-
-            // PUSH 10 PUSH 10 EQ PUSH 23 CJUMP PUSH 1 HALT PUSH 0 HALT");
-
-            // PUSH 10 PUSH 5 CALL <div> PUSH 7 PUSH 23 CALL <add> HALT div: DIV RET add: ADD RET
-
-            foreach (var item in mn)
-            {
-                Console.Write(item + " ");
-            }
 
             Console.WriteLine();
 

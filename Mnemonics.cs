@@ -35,7 +35,6 @@ class Mnemonics
             {
                 if (value == 23 || value == 22)
                 {
-                    Console.WriteLine(mnemonics[i + 1][1..(mnemonics[i + 1].Length - 2)]);
                     byte[] nbrArray = Utils.ToByteArray(addresses[mnemonics[i + 1][1..(mnemonics[i + 1].Length - 1)]].ToString());
 
                     buffer.Add(0);
@@ -52,7 +51,7 @@ class Mnemonics
             }
             else if (val[0] == '<')
             {
-                int index = GetIndex(mnemonics, val[1..(val.Length - 2)]);
+                int index = addresses[val[1..(val.Length - 1)]];
 
                 byte[] nbrArray = Utils.ToByteArray(index.ToString());
 
