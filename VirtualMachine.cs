@@ -220,10 +220,6 @@ class VirtualMachine(byte[] program)
                 case Instructions.HALT:
                     counter = program.Length;
                     break;
-
-                case Instructions.NOP:
-                    counter++;
-                    break;
             }
         }
         return this;

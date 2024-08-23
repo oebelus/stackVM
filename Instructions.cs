@@ -32,8 +32,7 @@ public enum Instructions : byte
     CALL,
     RET,
 
-    HALT,
-    NOP
+    HALT
 }
 
 class Instruction
@@ -67,7 +66,6 @@ class Instruction
         {"CALL", 24},
         {"RET", 25},
         {"HALT", 26},
-        {"NOP", 27},
     };
 }
 
