@@ -66,7 +66,7 @@ class VirtualMachine(byte[] program)
                     operand_2 = stack.Pop();
                     operand_1 = stack.Pop();
 
-                    stack.Push(operand_2 % operand_1);
+                    stack.Push(operand_1 % operand_2);
                     counter++;
                     break;
 
