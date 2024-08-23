@@ -10,7 +10,6 @@ class Mnemonics
             if (mnemonics[i].StartsWith('<') && !addresses.ContainsKey(mnemonics[i][1..mnemonics[i].Length]))
             {
                 int index = GetIndex(mnemonics, mnemonics[i]);
-
                 addresses.TryAdd(mnemonics[i][1..(mnemonics[i].Length - 1)], index);
             }
         }
@@ -20,10 +19,6 @@ class Mnemonics
     {
         string[] mnemonics = mnemo.Split(' ');
         Dictionary<string, int> addresses = MapAddress(mnemonics);
-        foreach (var (key, val) in addresses)
-        {
-            Console.WriteLine(key + " " + val);
-        }
         List<byte> buffer = [];
         int length = mnemonics.Length;
 
@@ -35,7 +30,6 @@ class Mnemonics
             {
                 if (value == 23 || value == 22)
                 {
-                    Console.WriteLine(mnemonics[i + 1][1..(mnemonics[i + 1].Length - 2)]);
                     byte[] nbrArray = Utils.ToByteArray(addresses[mnemonics[i + 1][1..(mnemonics[i + 1].Length - 1)]].ToString());
 
                     buffer.Add(0);
@@ -52,7 +46,7 @@ class Mnemonics
             }
             else if (val[0] == '<')
             {
-                int index = GetIndex(mnemonics, val[1..(val.Length - 2)]);
+                int index = addresses[val[1..(val.Length - 1)]];
 
                 byte[] nbrArray = Utils.ToByteArray(index.ToString());
 

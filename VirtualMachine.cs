@@ -39,16 +39,16 @@ class VirtualMachine(byte[] program)
                     break;
 
                 case Instructions.SUB:
-                    operand_1 = stack.Pop();
                     operand_2 = stack.Pop();
+                    operand_1 = stack.Pop();
 
                     stack.Push(operand_1 - operand_2);
                     counter++;
                     break;
 
                 case Instructions.DIV:
-                    operand_1 = stack.Pop();
                     operand_2 = stack.Pop();
+                    operand_1 = stack.Pop();
 
                     stack.Push(operand_1 / operand_2);
                     counter++;
@@ -63,32 +63,32 @@ class VirtualMachine(byte[] program)
                     break;
 
                 case Instructions.MOD:
-                    operand_1 = stack.Pop();
                     operand_2 = stack.Pop();
+                    operand_1 = stack.Pop();
 
                     stack.Push(operand_1 % operand_2);
                     counter++;
                     break;
 
                 case Instructions.EXP:
-                    operand_1 = stack.Pop();
                     operand_2 = stack.Pop();
+                    operand_1 = stack.Pop();
 
                     stack.Push((int)Math.Pow(operand_1, operand_2));
                     counter++;
                     break;
 
                 case Instructions.LT:
-                    operand_1 = stack.Pop();
                     operand_2 = stack.Pop();
+                    operand_1 = stack.Pop();
 
-                    stack.Push(operand_2 < operand_1 ? 1 : 0);
+                    stack.Push(operand_1 < operand_2 ? 1 : 0);
                     counter++;
                     break;
 
                 case Instructions.GT:
-                    operand_1 = stack.Pop();
                     operand_2 = stack.Pop();
+                    operand_1 = stack.Pop();
 
                     stack.Push(operand_1 > operand_2 ? 1 : 0);
                     counter++;
@@ -113,32 +113,32 @@ class VirtualMachine(byte[] program)
                     break;
 
                 case Instructions.OR:
-                    operand_1 = stack.Pop();
                     operand_2 = stack.Pop();
+                    operand_1 = stack.Pop();
 
                     stack.Push(operand_1 | operand_2);
                     counter++;
                     break;
 
                 case Instructions.AND:
-                    operand_1 = stack.Pop();
                     operand_2 = stack.Pop();
+                    operand_1 = stack.Pop();
 
                     stack.Push(operand_1 & operand_2);
                     counter++;
                     break;
 
                 case Instructions.LS:
-                    operand_1 = stack.Pop();
                     operand_2 = stack.Pop();
+                    operand_1 = stack.Pop();
 
                     stack.Push(operand_1 << operand_2);
                     counter++;
                     break;
 
                 case Instructions.RS:
-                    operand_1 = stack.Pop();
                     operand_2 = stack.Pop();
+                    operand_1 = stack.Pop();
 
                     stack.Push(operand_1 << operand_2);
                     counter++;
