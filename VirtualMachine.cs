@@ -108,7 +108,10 @@ class VirtualMachine(byte[] program)
                     break;
 
                 case Instructions.NOT:
-                    stack.Push(~stack.Pop());
+                    if (stack.Pop() != 0)
+                        stack.Push(0);
+                    else stack.Push(1);
+
                     counter++;
                     break;
 
