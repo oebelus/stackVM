@@ -1,11 +1,13 @@
 interface IValue { }
 
-class Number(long number) : IValue
+record Number(long Value) : IValue
 {
-    public long Value => number;
 }
 
-class String(string str) : IValue
+record String(string Value) : IValue
 {
-    public string Value => str;
+}
+
+record Nil() : IValue
+{
 }

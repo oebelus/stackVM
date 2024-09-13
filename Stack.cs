@@ -1,3 +1,5 @@
+
+
 class Stack<T>(int size)
 {
     public int head = 0;
@@ -29,9 +31,15 @@ class Stack<T>(int size)
     public void StackLogger(int n)
     {
         int count = 0;
+
+        foreach (var item in stack)
+        {
+            Console.Write(item + " ");
+            count++;
+        }
         while (count < n)
         {
-            Console.Write(stack[count] + " ");
+            Console.Write(0 + " ");
             count++;
         }
     }
@@ -54,5 +62,17 @@ class Stack<T>(int size)
     public T Pook()
     {
         return stack[head - 1];
+    }
+
+    public Stack<S> Map<S>(Func<T, S> Mapper)
+    {
+        Stack<S> result = new(head);
+
+        for (int i = 0; i < head; i++)
+        {
+            result.Push(Mapper(stack[i]));
+        }
+
+        return result;
     }
 }

@@ -36,7 +36,7 @@ class VirtualMachine(byte[] program)
 
                     if (operand_1 is String || operand_2 is String)
                     {
-                        stack.Push(new String((operand_1 as String)!.Value + (operand_2 as String)!.Value));
+                        stack.Push(new String((operand_1 as String)! + (operand_2 as String)!.Value));
                     }
 
                     else
@@ -240,7 +240,7 @@ class VirtualMachine(byte[] program)
     {
         Console.Write($"\nSTACK:\n\n[ ");
 
-        stack.StackLogger(50);
+        StackToLoggable(stack).StackLogger(50);
 
         Console.Write("]\n\n");
 
@@ -249,24 +249,35 @@ class VirtualMachine(byte[] program)
         Console.Write("MEMORY:\n\n[ ");
 
         int count = 0;
+        string[] LoggableMemory = ArrToLoggable(memory);
+
         while (count < 50)
         {
-            Console.Write(memory[count] + " ");
+            Console.Write(LoggableMemory[count] + " ");
             count++;
         }
 
         Console.Write("]\n\n");
 
+        count = 0;
+
         if (stackFrames.head > 0)
         {
-            Console.Write("STACK FRAME:\n\n[ ");
+            Console.Write("STACK FRAMES:\n\n");
 
-            var el = stackFrames.ElementAt(0);
+            while (count < stackFrames.head)
+            {
+                Console.Write($"- Stack frame no. {count}\n\n[ ");
 
-            foreach (var item in el)
-                Console.Write(item + " ");
+                string[] el = ArrToLoggable(stackFrames.ElementAt(count));
 
-            Console.Write("]\n\n");
+                foreach (var item in el)
+                    Console.Write(item + " ");
+
+                Console.Write("]\n\n");
+
+                count++;
+            }
 
             Console.WriteLine($"Frame Pointer: {stackFrames.head}, length: {stackFrames.Length()}\n");
         }
@@ -289,5 +300,31 @@ class VirtualMachine(byte[] program)
         Console.Write("]\n\n");
 
         Console.WriteLine($"Call Stack Pointer: {call_stack.head}\n");
+    }
+
+    public static Stack<string> StackToLoggable(Stack<IValue> stack)
+    {
+        return stack.Map(x =>
+        {
+            return x switch
+            {
+                Number num => num.Value.ToString(),
+                String str => str.Value.ToString(),
+                _ => 0.ToString(),
+            };
+        });
+    }
+
+    public static string[] ArrToLoggable(IValue[] arr)
+    {
+        return arr.Select(x =>
+        {
+            return x switch
+            {
+                Number num => num.Value.ToString(),
+                String str => str.Value.ToString(),
+                _ => 0.ToString(),
+            };
+        }).ToArray();
     }
 }
