@@ -1,3 +1,5 @@
+using Instruction = Language.stackVM.Instruction;
+
 class Mnemonics
 {
     public static Dictionary<string, int> MapAddress(string[] mnemonics)
@@ -26,7 +28,7 @@ class Mnemonics
         {
             var val = mnemonics[i];
 
-            if (Instruction.instruction.TryGetValue(val, out int value))
+            if (Instruction.vInstruction.TryGetValue(val, out int value))
             {
                 if (value == 23 || value == 22)
                 {
@@ -88,7 +90,7 @@ class Mnemonics
             }
 
             if (int.TryParse(val, out int _)) inc += 4;
-            else if (Instruction.instruction.ContainsKey(val.Trim()))
+            else if (Instruction.vInstruction.ContainsKey(val.Trim()))
             {
                 if (val == "JUMP" || val == "CJUMP") inc += 5;
                 if (val == "CALL") inc += 5;

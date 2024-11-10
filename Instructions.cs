@@ -1,3 +1,5 @@
+namespace Language.stackVM;
+
 public enum Instructions : byte
 {
     PUSH,
@@ -37,7 +39,7 @@ public enum Instructions : byte
 
 class Instruction
 {
-    public static Dictionary<string, int> instruction = new()
+    public static Dictionary<string, int> vInstruction = new()
     {
         {"PUSH", 0},
         {"POP", 1},
@@ -66,6 +68,39 @@ class Instruction
         {"CALL", 24},
         {"RET", 25},
         {"HALT", 26},
+    };
+
+    public static Dictionary<TokenType, string> cOperation = new()
+    {
+        {TokenType.PLUS, "ADD"},
+        {TokenType.MINUS, "SUB"},
+        {TokenType.MOD, "MOD"},
+        {TokenType.STAR, "MUL"},
+        {TokenType.SLASH, "DIV"},
+        {TokenType.LESS, "LT"},
+        {TokenType.GREATER, "GT"},
+        {TokenType.EQUAL_EQUAL, "EQ"},
+        {TokenType.AND, "AND"},
+        {TokenType.OR, "OR"},
+        {TokenType.BANG, "NEG"},
+    };
+
+    public static Dictionary<Instructions, string> cInstruction = new()
+    {
+        {Instructions.PUSH, "PUSH"},
+        {Instructions.POP, "POP"},
+        {Instructions.LOAD, "LOAD"},
+        {Instructions.GLOAD, "GLOAD"},
+        {Instructions.STORE, "STORE"},
+        {Instructions.GSTORE, "GSTORE"},
+        {Instructions.RET, "RET"},
+        {Instructions.CJUMP, "CJUMP"},
+        {Instructions.JUMP, "JUMP"},
+        {Instructions.EQ, "EQ"},
+        {Instructions.GT, "GT"},
+        {Instructions.LT, "LT"},
+        {Instructions.NEG, "LT"},
+        {Instructions.NOT, "NOT"},
     };
 }
 

@@ -1,3 +1,5 @@
+using Instruction = Language.stackVM.Instruction;
+
 class Utils
 {
     public static int ToUint32(byte[] arr)
@@ -32,12 +34,12 @@ class Utils
         {
             if (bytecode[i] == 0 || bytecode[i] == 24)
             {
-                mnemonic.Add($"{i}: {Instruction.instruction.FirstOrDefault(x => x.Value == bytecode[i]).Key} {ToUint32(bytecode[i..(i + 5)])}");
+                mnemonic.Add($"{i}: {Instruction.vInstruction.FirstOrDefault(x => x.Value == bytecode[i]).Key} {ToUint32(bytecode[i..(i + 5)])}");
                 i += 5;
                 continue;
             }
 
-            mnemonic.Add($"{i}: {Instruction.instruction.FirstOrDefault(x => x.Value == bytecode[i]).Key}");
+            mnemonic.Add($"{i}: {Instruction.vInstruction.FirstOrDefault(x => x.Value == bytecode[i]).Key}");
             i++;
         }
 
@@ -52,7 +54,7 @@ class Utils
 
         for (int i = 0; i < length; i++)
         {
-            if (Instruction.instruction.TryGetValue(arr[i].ToString(), out int _)) inc++;
+            if (Instruction.vInstruction.TryGetValue(arr[i].ToString(), out int _)) inc++;
             else if (int.TryParse(arr[i], out int _)) inc += 4;
             else if (arr[i].StartsWith("</")) inc += 1;
         }
