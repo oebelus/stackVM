@@ -1,3 +1,5 @@
+namespace vm;
+
 public enum Instructions : byte
 {
     PUSH,

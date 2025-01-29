@@ -1,3 +1,5 @@
+using Instruction = vm.Instruction;
+
 class Utils
 {
     public static int ToUint32(byte[] arr)

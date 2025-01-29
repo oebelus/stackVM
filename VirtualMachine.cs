@@ -1,3 +1,5 @@
+using Instructions = vm.Instructions;
+
 class VirtualMachine(byte[] program)
 {
     private readonly IValue[] memory = new IValue[1024];

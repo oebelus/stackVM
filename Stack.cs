@@ -1,5 +1,3 @@
-
-
 class Stack<T>(int size)
 {
     public int head = 0;

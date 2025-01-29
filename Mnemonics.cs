@@ -1,3 +1,5 @@
+using Instruction = vm.Instruction;
+
 class Mnemonics
 {
     public static Dictionary<string, int> MapAddress(string[] mnemonics)
