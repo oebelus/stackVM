@@ -23,9 +23,11 @@ class VirtualMachine(byte[] program)
             switch ((Instructions)instruction)
             {
                 case Instructions.PUSH:
-                    int result = Utils.ToUint32(program.Skip(counter + 1).Take(4).ToArray());
-                    stack.Push(new Number(result));
-                    counter += 5;
+                    IValue value = (IValue)program.Skip(counter + 1).Take(1);
+
+                    stack.Push(value);
+
+                    counter += value.Size;
                     break;
 
                 case Instructions.POP:
