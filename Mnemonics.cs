@@ -1,3 +1,4 @@
+using System.Text;
 using Instruction = vm.Instruction;
 
 class Mnemonics
@@ -43,6 +44,41 @@ class Mnemonics
                     buffer.Add((byte)value);
 
                     i++;
+                }
+                else if (value == 27)
+                {
+                    buffer.Add(27);
+
+                    int strSize;
+                    string str;
+
+                    try
+                    {
+                        strSize = int.Parse(mnemonics[i + 1]);
+                        str = mnemonics[i + 2];
+                    }
+                    catch (IndexOutOfRangeException)
+                    {
+                        throw new Exception("Missing arguments for PUSH_STR_CONST");
+                    }
+
+                    i += 2;
+
+                    byte[] nbrArray = Utils.ToByteArray(strSize.ToString());
+
+                    foreach (var item in nbrArray)
+                    {
+                        buffer.Add(item);
+                    }
+
+                    int words = (int)(strSize % 4 == 0 ? strSize / 4 : Math.Ceiling((float)strSize / 4));
+
+                    byte[] byteStr = Utils.SerializeString(str, words);
+
+                    foreach (var item in byteStr)
+                    {
+                        buffer.Add(item);
+                    }
                 }
                 else buffer.Add((byte)value);
             }

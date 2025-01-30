@@ -1,3 +1,4 @@
+using System.Text;
 using Instruction = vm.Instruction;
 
 class Utils
@@ -38,6 +39,14 @@ class Utils
                 i += 5;
                 continue;
             }
+            else if (bytecode[i] == 27)
+            {
+                int len = ToUint32(bytecode[i..(i + 5)]);
+
+                mnemonic.Add($"{i}: {Instruction.vInstruction.FirstOrDefault(x => x.Value == bytecode[i]).Key} {ToUint32(bytecode[i..(i + len)])}");
+
+                i += len + 5;
+            }
 
             mnemonic.Add($"{i}: {Instruction.vInstruction.FirstOrDefault(x => x.Value == bytecode[i]).Key}");
             i++;
@@ -60,5 +69,37 @@ class Utils
         }
 
         return inc;
+    }
+
+    public static byte[] SerializeString(string str, int words)
+    {
+        byte[] strBytes = Encoding.UTF8.GetBytes(str);
+        int size = words * 4;
+        int difference = size - strBytes.Length;
+
+        List<byte> original = [.. strBytes[..(difference + 1)]];
+        byte[] toPad = [.. strBytes[(difference + 1)..]];
+
+        foreach (var item in strBytes) Console.WriteLine(item);
+
+        int padLength = toPad.Length;
+        int zeros = 4 - padLength;
+
+        for (int i = 0; i < zeros; i++)
+        {
+            original.Add(0);
+        }
+
+        for (int i = 0; i < padLength; i++)
+        {
+            original.Add(toPad[i]);
+        }
+
+        return [.. original];
+    }
+
+    public static string DeserializeString(byte[] bytes)
+    {
+        return Encoding.UTF8.GetString(bytes);
     }
 }

@@ -2,7 +2,13 @@ namespace vm;
 
 public enum Instructions : byte
 {
-    PUSH,
+    PUSH, // int
+    PUSH_CHAR, // 4 bytes
+    PUSH_STR, // 4 bytes
+    PUSH_STR_SHORT, // 5-261 bytes
+    PUSH_STR_MEDIUM, // 262–65,536 bytes
+    PUSH_STR_LONG, // 65,537–4,194,304 bytes
+    PUSH_STR_CONST, // Constant String 
     POP,
 
     ADD,
@@ -68,6 +74,12 @@ class Instruction
         {"CALL", 24},
         {"RET", 25},
         {"HALT", 26},
+        {"PUSH_STR", 27},
+        // {"PUSH_CHAR", 28},
+        // {"PUSH_STR_SHORT", 29},
+        // {"PUSH_STR_MEDIUM", 30},
+        // {"PUSH_STR_MEDIUM", 31},
+        // {"PUSH_STR_LONG", 32}
     };
 
     // public static Dictionary<TokenType, string> cOperation = new()

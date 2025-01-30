@@ -1,3 +1,4 @@
+using System.Text;
 using Instructions = vm.Instructions;
 
 class VirtualMachine(byte[] program)
@@ -23,11 +24,26 @@ class VirtualMachine(byte[] program)
             switch ((Instructions)instruction)
             {
                 case Instructions.PUSH:
-                    IValue value = (IValue)program.Skip(counter + 1).Take(1);
+                    int value = Utils.ToUint32([.. program.Skip(counter + 1).Take(4)]);
 
-                    stack.Push(value);
+                    stack.Push(new Number(value));
 
-                    counter += value.Size;
+                    counter += 5;
+                    break;
+
+                case Instructions.PUSH_CHAR:
+                    stack.Push(new Number(Utils.ToUint32([.. program.Skip(counter + 1).Take(4)])));
+                    counter += 5;
+                    break;
+
+                case Instructions.PUSH_STR_SHORT:
+                    int length = Utils.ToUint32([.. program.Skip(counter + 1).Take(4)]);
+                    Console.WriteLine(length);
+                    string s = Encoding.UTF8.GetString([.. program.Skip(counter + 5).Take(length)]);
+
+                    stack.Push(new String(s));
+
+                    counter += 5 + length;
                     break;
 
                 case Instructions.POP:
