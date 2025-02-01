@@ -36,14 +36,16 @@ class VirtualMachine(byte[] program)
                     counter += 5;
                     break;
 
-                case Instructions.PUSH_STR_SHORT:
+                case Instructions.PUSH_STR:
                     int length = Utils.ToUint32([.. program.Skip(counter + 1).Take(4)]);
-                    Console.WriteLine(length);
-                    string s = Encoding.UTF8.GetString([.. program.Skip(counter + 5).Take(length)]);
 
-                    stack.Push(new String(s));
+                    counter += 5;
 
-                    counter += 5 + length;
+                    byte[] s = program[counter..(counter + 4)];
+
+                    stack.Push(new String(Utils.DeserializeString(s)));
+
+                    counter += 4;
                     break;
 
                 case Instructions.POP:

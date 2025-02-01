@@ -3,12 +3,6 @@ namespace vm;
 public enum Instructions : byte
 {
     PUSH, // int
-    PUSH_CHAR, // 4 bytes
-    PUSH_STR, // 4 bytes
-    PUSH_STR_SHORT, // 5-261 bytes
-    PUSH_STR_MEDIUM, // 262–65,536 bytes
-    PUSH_STR_LONG, // 65,537–4,194,304 bytes
-    PUSH_STR_CONST, // Constant String 
     POP,
 
     ADD,
@@ -40,7 +34,10 @@ public enum Instructions : byte
     CALL,
     RET,
 
-    HALT
+    HALT,
+
+    PUSH_STR, // 4 bytes
+    PUSH_CHAR, // 1 bytes
 }
 
 class Instruction

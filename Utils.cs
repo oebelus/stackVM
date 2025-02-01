@@ -41,15 +41,26 @@ class Utils
             }
             else if (bytecode[i] == 27)
             {
+                byte instruction = bytecode[i];
+                int step = i;
+
                 int len = ToUint32(bytecode[i..(i + 5)]);
+                i += 5;
 
-                mnemonic.Add($"{i}: {Instruction.vInstruction.FirstOrDefault(x => x.Value == bytecode[i]).Key} {ToUint32(bytecode[i..(i + len)])}");
+                // Console.WriteLine($"length: {len}");
 
-                i += len + 5;
+                string str = DeserializeString([.. bytecode[i..(i + 4)].Where(x => x != 0)]);
+                i += 4;
+
+                // Console.WriteLine($"length: {str}");
+
+                mnemonic.Add($"{step}: {Instruction.vInstruction.FirstOrDefault(x => x.Value == instruction).Key} {str} of size {len}");
             }
-
-            mnemonic.Add($"{i}: {Instruction.vInstruction.FirstOrDefault(x => x.Value == bytecode[i]).Key}");
-            i++;
+            else
+            {
+                mnemonic.Add($"{i}: {Instruction.vInstruction.FirstOrDefault(x => x.Value == bytecode[i]).Key}");
+                i++;
+            }
         }
 
         return mnemonic;
@@ -71,31 +82,32 @@ class Utils
         return inc;
     }
 
-    public static byte[] SerializeString(string str, int words)
+    public static byte[] SerializeString(string str, int length)
     {
-        byte[] strBytes = Encoding.UTF8.GetBytes(str);
-        int size = words * 4;
-        int difference = size - strBytes.Length;
+        List<byte> strBytes = [.. Encoding.UTF8.GetBytes(str)];
 
-        List<byte> original = [.. strBytes[..(difference + 1)]];
-        byte[] toPad = [.. strBytes[(difference + 1)..]];
-
-        foreach (var item in strBytes) Console.WriteLine(item);
-
-        int padLength = toPad.Length;
-        int zeros = 4 - padLength;
-
-        for (int i = 0; i < zeros; i++)
+        if (strBytes.Count > 4)
         {
-            original.Add(0);
+            strBytes.AddRange(strBytes[..3]);
+        }
+        else
+        {
+            int zeros = 4 - strBytes.Count;
+
+            for (int i = 0; i < zeros; i++)
+            {
+                strBytes.Insert(0, 0);
+            }
+
+
+            foreach (var item in strBytes)
+            {
+                Console.WriteLine(item);
+            }
         }
 
-        for (int i = 0; i < padLength; i++)
-        {
-            original.Add(toPad[i]);
-        }
 
-        return [.. original];
+        return [.. strBytes];
     }
 
     public static string DeserializeString(byte[] bytes)

@@ -71,9 +71,7 @@ class Mnemonics
                         buffer.Add(item);
                     }
 
-                    int words = (int)(strSize % 4 == 0 ? strSize / 4 : Math.Ceiling((float)strSize / 4));
-
-                    byte[] byteStr = Utils.SerializeString(str, words);
+                    byte[] byteStr = Utils.SerializeString(str, 4);
 
                     foreach (var item in byteStr)
                     {
