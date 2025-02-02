@@ -67,15 +67,17 @@ class VirtualMachine(byte[] program)
                     operand_1 = stack.Pop();
                     operand_2 = stack.Pop();
 
-                    if (operand_1 is String || operand_2 is String)
+                    Console.WriteLine($"{operand_1.Value} + {operand_2.Value}");
+
+                    try
                     {
-                        stack.Push(new String((operand_1 as String)! + (operand_2 as String)!.Value));
+                        stack.Push(new Number(int.Parse((operand_1.Value as string)!) + int.Parse((operand_2.Value as string)!)));
+                    }
+                    catch (FormatException)
+                    {
+                        throw new Exception("Type Mismatch");
                     }
 
-                    else
-                    {
-                        stack.Push(new Number((operand_1 as Number)!.Value + (operand_2 as Number)!.Value));
-                    }
                     counter++;
                     break;
 
@@ -107,7 +109,8 @@ class VirtualMachine(byte[] program)
                     operand_2 = stack.Pop();
                     operand_1 = stack.Pop();
 
-                    stack.Push(new Number((operand_1 as Number)!.Value % (operand_2 as Number)!.Value));
+                    Console.WriteLine($"{operand_1.Value}, {operand_2.Value}");
+
                     counter++;
                     break;
 

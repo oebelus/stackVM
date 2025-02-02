@@ -59,7 +59,7 @@ class Mnemonics
                     }
                     catch (IndexOutOfRangeException)
                     {
-                        throw new Exception("Missing arguments for PUSH_STR_CONST");
+                        throw new Exception("Missing arguments for PUSH_STR");
                     }
 
                     i += 2;
