@@ -5,6 +5,7 @@
 
 # dotenv files
 .env
+Program.cs
 
 # User-specific files
 *.rsuser
@@ -482,3 +483,4 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+Program.cs

@@ -77,24 +77,26 @@ class Instruction
         {"CONCAT", 29},
     };
 
-    // public static Dictionary<TokenType, string> cOperation = new()
-    // {
-    //     {TokenType.PLUS, "ADD"},
-    //     {TokenType.MINUS, "SUB"},
-    //     {TokenType.MOD, "MOD"},
-    //     {TokenType.STAR, "MUL"},
-    //     {TokenType.SLASH, "DIV"},
-    //     {TokenType.LESS, "LT"},
-    //     {TokenType.GREATER, "GT"},
-    //     {TokenType.EQUAL_EQUAL, "EQ"},
-    //     {TokenType.AND, "AND"},
-    //     {TokenType.OR, "OR"},
-    //     {TokenType.BANG, "NEG"},
-    // };
+    public static Dictionary<TokenType, string> cOperation = new()
+    {
+        {TokenType.PLUS, "ADD"},
+        {TokenType.MINUS, "SUB"},
+        {TokenType.MOD, "MOD"},
+        {TokenType.STAR, "MUL"},
+        {TokenType.SLASH, "DIV"},
+        {TokenType.LESS, "LT"},
+        {TokenType.GREATER, "GT"},
+        {TokenType.EQUAL_EQUAL, "EQ"},
+        {TokenType.AND, "AND"},
+        {TokenType.OR, "OR"},
+        {TokenType.BANG, "NEG"},
+    };
 
     public static Dictionary<Instructions, string> cInstruction = new()
     {
         {Instructions.PUSH, "PUSH"},
+        {Instructions.PUSH_STR, "PUSH_STR"},
+        {Instructions.PUSH_CHAR, "PUSH_CHAR"},
         {Instructions.POP, "POP"},
         {Instructions.LOAD, "LOAD"},
         {Instructions.GLOAD, "GLOAD"},
