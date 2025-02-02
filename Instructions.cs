@@ -36,8 +36,9 @@ public enum Instructions : byte
 
     HALT,
 
-    PUSH_STR, // 4 bytes
-    PUSH_CHAR, // 1 bytes
+    PUSH_STR,
+    PUSH_CHAR,
+    CONCAT
 }
 
 class Instruction
@@ -72,11 +73,8 @@ class Instruction
         {"RET", 25},
         {"HALT", 26},
         {"PUSH_STR", 27},
-        // {"PUSH_CHAR", 28},
-        // {"PUSH_STR_SHORT", 29},
-        // {"PUSH_STR_MEDIUM", 30},
-        // {"PUSH_STR_MEDIUM", 31},
-        // {"PUSH_STR_LONG", 32}
+        {"PUSH_CHAR", 28},
+        {"CONCAT", 29},
     };
 
     // public static Dictionary<TokenType, string> cOperation = new()
