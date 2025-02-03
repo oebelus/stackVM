@@ -70,20 +70,20 @@ class Instruction
         {"HALT", 26},
     };
 
-    public static Dictionary<TokenType, string> cOperation = new()
-    {
-        {TokenType.PLUS, "ADD"},
-        {TokenType.MINUS, "SUB"},
-        {TokenType.MOD, "MOD"},
-        {TokenType.STAR, "MUL"},
-        {TokenType.SLASH, "DIV"},
-        {TokenType.LESS, "LT"},
-        {TokenType.GREATER, "GT"},
-        {TokenType.EQUAL_EQUAL, "EQ"},
-        {TokenType.AND, "AND"},
-        {TokenType.OR, "OR"},
-        {TokenType.BANG, "NEG"},
-    };
+    // public static Dictionary<TokenType, string> cOperation = new()
+    // {
+    //     {TokenType.PLUS, "ADD"},
+    //     {TokenType.MINUS, "SUB"},
+    //     {TokenType.MOD, "MOD"},
+    //     {TokenType.STAR, "MUL"},
+    //     {TokenType.SLASH, "DIV"},
+    //     {TokenType.LESS, "LT"},
+    //     {TokenType.GREATER, "GT"},
+    //     {TokenType.EQUAL_EQUAL, "EQ"},
+    //     {TokenType.AND, "AND"},
+    //     {TokenType.OR, "OR"},
+    //     {TokenType.BANG, "NEG"},
+    // };
 
     public static Dictionary<Instructions, string> cInstruction = new()
     {
