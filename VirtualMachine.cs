@@ -1,4 +1,5 @@
-using Instructions = Language.stackVM.Instructions;
+using System.Text;
+using Instructions = vm.Instructions;
 
 class VirtualMachine(byte[] program)
 {
@@ -23,9 +24,39 @@ class VirtualMachine(byte[] program)
             switch ((Instructions)instruction)
             {
                 case Instructions.PUSH:
-                    int result = Utils.ToUint32(program.Skip(counter + 1).Take(4).ToArray());
-                    stack.Push(new Number(result));
+                    int value = ByteManipulation.ToUint32([.. program.Skip(counter + 1).Take(4)]);
+
+                    stack.Push(new Number(value));
+
                     counter += 5;
+                    break;
+
+                case Instructions.PUSH_CHAR:
+                    byte[] c = program[(counter + 1)..(counter + 5)];
+
+                    stack.Push(new Char(ByteManipulation.DeserializeChar(c)));
+
+                    counter += 5;
+                    break;
+
+                case Instructions.PUSH_STR:
+                    counter += 5;
+
+                    byte[] s = program[counter..(counter + 4)];
+
+                    stack.Push(new String(ByteManipulation.DeserializeString(s)));
+
+                    counter += 4;
+                    break;
+
+                case Instructions.CONCAT:
+                    operand_2 = stack.Pop();
+                    operand_1 = stack.Pop();
+
+                    string concat = operand_1.Value.ToString() + operand_2.Value.ToString();
+
+                    stack.Push(new String(concat));
+                    counter += 9;
                     break;
 
                 case Instructions.POP:
@@ -36,15 +67,17 @@ class VirtualMachine(byte[] program)
                     operand_1 = stack.Pop();
                     operand_2 = stack.Pop();
 
-                    if (operand_1 is String || operand_2 is String)
+                    Console.WriteLine($"{operand_1.Value} + {operand_2.Value}");
+
+                    try
                     {
-                        stack.Push(new String((operand_1 as String)! + (operand_2 as String)!.Value));
+                        stack.Push(new Number(int.Parse((operand_1.Value as string)!) + int.Parse((operand_2.Value as string)!)));
+                    }
+                    catch (FormatException)
+                    {
+                        throw new Exception("Type Mismatch");
                     }
 
-                    else
-                    {
-                        stack.Push(new Number((operand_1 as Number)!.Value + (operand_2 as Number)!.Value));
-                    }
                     counter++;
                     break;
 
@@ -76,7 +109,8 @@ class VirtualMachine(byte[] program)
                     operand_2 = stack.Pop();
                     operand_1 = stack.Pop();
 
-                    stack.Push(new Number((operand_1 as Number)!.Value % (operand_2 as Number)!.Value));
+                    Console.WriteLine($"{operand_1.Value}, {operand_2.Value}");
+
                     counter++;
                     break;
 
@@ -84,7 +118,7 @@ class VirtualMachine(byte[] program)
                     operand_2 = stack.Pop();
                     operand_1 = stack.Pop();
 
-                    stack.Push(new Number((long)Math.Pow((operand_1 as Number)!.Value, (operand_2 as Number)!.Value)));
+                    stack.Push(new Number((int)Math.Pow((operand_1 as Number)!.Value, (operand_2 as Number)!.Value)));
                     counter++;
                     break;
 
@@ -211,7 +245,7 @@ class VirtualMachine(byte[] program)
                 case Instructions.CALL:
                     call_stack.Push(counter + 5);
                     stackFrames.Push(new IValue[32]);
-                    destination = new Number(Utils.ToUint32(program.Skip(counter + 1).Take(4).ToArray()));
+                    destination = new Number(ByteManipulation.ToUint32(program.Skip(counter + 1).Take(4).ToArray()));
 
                     counter = (int)destination.Value;
                     break;
@@ -312,6 +346,7 @@ class VirtualMachine(byte[] program)
             {
                 Number num => num.Value.ToString(),
                 String str => str.Value.ToString(),
+                Char chr => chr.Value.ToString(),
                 _ => 0.ToString(),
             };
         });

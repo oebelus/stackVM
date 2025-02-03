@@ -1,4 +1,5 @@
-using Instruction = Language.stackVM.Instruction;
+using System.Text;
+using Instruction = vm.Instruction;
 
 class Mnemonics
 {
@@ -32,7 +33,7 @@ class Mnemonics
             {
                 if (value == 23 || value == 22)
                 {
-                    byte[] nbrArray = Utils.ToByteArray(addresses[mnemonics[i + 1][1..(mnemonics[i + 1].Length - 1)]].ToString());
+                    byte[] nbrArray = ByteManipulation.ToByteArray(addresses[mnemonics[i + 1][1..(mnemonics[i + 1].Length - 1)]].ToString());
 
                     buffer.Add(0);
 
@@ -44,13 +45,70 @@ class Mnemonics
 
                     i++;
                 }
+                else if (value == 27)
+                {
+                    buffer.Add(27);
+
+                    int strSize;
+                    string str;
+
+                    try
+                    {
+                        strSize = int.Parse(mnemonics[i + 1]);
+                        str = mnemonics[i + 2];
+                    }
+                    catch (IndexOutOfRangeException)
+                    {
+                        throw new Exception("Missing arguments for PUSH_STR");
+                    }
+
+                    i += 2;
+
+                    byte[] nbrArray = ByteManipulation.ToByteArray(strSize.ToString());
+
+                    foreach (var item in nbrArray)
+                    {
+                        buffer.Add(item);
+                    }
+
+                    byte[] byteStr = ByteManipulation.SerializeString(str, 4);
+
+                    foreach (var item in byteStr)
+                    {
+                        buffer.Add(item);
+                    }
+                }
+                else if (value == 28)
+                {
+                    buffer.Add(28);
+
+                    i++;
+
+                    string c;
+
+                    try
+                    {
+                        c = mnemonics[i];
+                    }
+                    catch (IndexOutOfRangeException)
+                    {
+                        throw new Exception("Missing arguments for PUSH_CHAR_CONST");
+                    }
+
+                    byte[] charArray = ByteManipulation.SerializeString(c, 4);
+
+                    foreach (var item in charArray)
+                    {
+                        buffer.Add(item);
+                    }
+                }
                 else buffer.Add((byte)value);
             }
             else if (val[0] == '<')
             {
                 int index = addresses[val[1..(val.Length - 1)]];
 
-                byte[] nbrArray = Utils.ToByteArray(index.ToString());
+                byte[] nbrArray = ByteManipulation.ToByteArray(index.ToString());
 
                 foreach (var item in nbrArray)
                 {
@@ -63,7 +121,7 @@ class Mnemonics
             }
             else
             {
-                byte[] nbrArray = Utils.ToByteArray(mnemonics[i]);
+                byte[] nbrArray = ByteManipulation.ToByteArray(mnemonics[i]);
 
                 foreach (var item in nbrArray)
                 {

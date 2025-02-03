@@ -1,5 +1,3 @@
-
-
 class Stack<T>(int size)
 {
     public int head = 0;
@@ -54,6 +52,11 @@ class Stack<T>(int size)
         return size;
     }
 
+    public int Count()
+    {
+        return head;
+    }
+
     public T Peek()
     {
         return stack[0];
@@ -61,6 +64,11 @@ class Stack<T>(int size)
 
     public T Pook()
     {
+        if (head == 0)
+        {
+            return stack[0];
+        }
+
         return stack[head - 1];
     }
 

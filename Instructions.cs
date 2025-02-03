@@ -1,8 +1,8 @@
-namespace Language.stackVM;
+namespace vm;
 
 public enum Instructions : byte
 {
-    PUSH,
+    PUSH, // int
     POP,
 
     ADD,
@@ -34,7 +34,11 @@ public enum Instructions : byte
     CALL,
     RET,
 
-    HALT
+    HALT,
+
+    PUSH_STR,
+    PUSH_CHAR,
+    CONCAT
 }
 
 class Instruction
@@ -68,6 +72,9 @@ class Instruction
         {"CALL", 24},
         {"RET", 25},
         {"HALT", 26},
+        {"PUSH_STR", 27},
+        {"PUSH_CHAR", 28},
+        {"CONCAT", 29},
     };
 
     // public static Dictionary<TokenType, string> cOperation = new()
@@ -88,6 +95,8 @@ class Instruction
     public static Dictionary<Instructions, string> cInstruction = new()
     {
         {Instructions.PUSH, "PUSH"},
+        {Instructions.PUSH_STR, "PUSH_STR"},
+        {Instructions.PUSH_CHAR, "PUSH_CHAR"},
         {Instructions.POP, "POP"},
         {Instructions.LOAD, "LOAD"},
         {Instructions.GLOAD, "GLOAD"},
