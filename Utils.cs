@@ -1,4 +1,4 @@
-using Instruction = Language.stackVM.Instruction;
+using Instruction = vm.Instruction;
 
 class Utils
 {
