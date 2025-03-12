@@ -1,21 +1,21 @@
-using System.Text;
 using Instructions = vm.Instructions;
 
 class VirtualMachine(byte[] program)
 {
-    private readonly IValue[] memory = new IValue[1024];
-    private readonly Stack<IValue> stack = new(1024);
-    private readonly Stack<IValue[]> stackFrames = new(16);
-    private readonly Stack<int> call_stack = new(16);
+    static readonly Specs VMSpecs = new();
+    private readonly byte[] memory = new byte[VMSpecs.MEMORY_SIZE];
+    private readonly Stack<int> stack = new(VMSpecs.STACK_SIZE);
+    private readonly Stack<int[]> stackFrames = new(VMSpecs.STACK_FRAMES_SIZE);
+    private readonly Stack<int> call_stack = new(VMSpecs.CALL_STACK_SIZE);
     private readonly byte[] program = program;
     private int counter = 0;
 
     public VirtualMachine Execute()
     {
-        IValue operand_1;
-        IValue operand_2;
+        int operand_1;
+        int operand_2;
 
-        stackFrames.Push(new IValue[32]);
+        stackFrames.Push(new int[32]);
 
         while (counter < program.Length)
         {
@@ -26,7 +26,7 @@ class VirtualMachine(byte[] program)
                 case Instructions.PUSH:
                     int value = ByteManipulation.ToUint32([.. program.Skip(counter + 1).Take(4)]);
 
-                    stack.Push(new Number(value));
+                    stack.Push(value);
 
                     counter += 5;
                     break;
@@ -34,29 +34,50 @@ class VirtualMachine(byte[] program)
                 case Instructions.PUSH_CHAR:
                     byte[] c = program[(counter + 1)..(counter + 5)];
 
-                    stack.Push(new Char(ByteManipulation.DeserializeChar(c)));
+                    stack.Push(ByteManipulation.DeserializeChar(c));
 
                     counter += 5;
                     break;
 
                 case Instructions.PUSH_STR:
+                    int pointer = ByteManipulation.ToUint32(program[counter..(counter + 4)]);
+                    stack.Push(pointer);
+
                     counter += 5;
 
-                    byte[] s = program[counter..(counter + 4)];
-
-                    stack.Push(new String(ByteManipulation.DeserializeString(s)));
+                    int size = ByteManipulation.ToUint32(program[counter..(counter + 4)]);
+                    stack.Push(size);
 
                     counter += 4;
                     break;
 
                 case Instructions.CONCAT:
-                    operand_2 = stack.Pop();
-                    operand_1 = stack.Pop();
+                    int size_2 = stack.Pop();
+                    int pointer_2 = stack.Pop();
 
-                    string concat = operand_1.Value.ToString() + operand_2.Value.ToString();
+                    byte[] str_2 = memory[pointer_2..size_2];
 
-                    stack.Push(new String(concat));
-                    counter += 9;
+                    int size_1 = stack.Pop();
+                    int pointer_1 = stack.Pop();
+
+                    byte[] str_1 = memory[pointer_1..size_1];
+
+                    string concat = ByteManipulation.DeserializeString(str_1) + ByteManipulation.DeserializeString(str_2);
+                    byte[] bytes_str = ByteManipulation.SerializeString(concat);
+
+                    int ptr = VMSpecs.HEAP_INDEX;
+
+                    foreach (var b in bytes_str)
+                    {
+                        if (ptr < VMSpecs.MEMORY_SIZE)
+                        {
+                            memory[ptr] = b;
+                        }
+                    }
+
+                    VMSpecs.HEAP_INDEX = ptr + 1;
+
+                    counter += 17;
                     break;
 
                 case Instructions.POP:
@@ -67,11 +88,9 @@ class VirtualMachine(byte[] program)
                     operand_1 = stack.Pop();
                     operand_2 = stack.Pop();
 
-                    Console.WriteLine($"{operand_1.Value} + {operand_2.Value}");
-
                     try
                     {
-                        stack.Push(new Number(int.Parse((operand_1.Value as string)!) + int.Parse((operand_2.Value as string)!)));
+                        stack.Push(operand_1 + operand_2);
                     }
                     catch (FormatException)
                     {
@@ -85,7 +104,7 @@ class VirtualMachine(byte[] program)
                     operand_2 = stack.Pop();
                     operand_1 = stack.Pop();
 
-                    stack.Push(new Number((operand_1 as Number)!.Value - (operand_2 as Number)!.Value));
+                    stack.Push(operand_1 - operand_2);
                     counter++;
                     break;
 
@@ -93,7 +112,7 @@ class VirtualMachine(byte[] program)
                     operand_2 = stack.Pop();
                     operand_1 = stack.Pop();
 
-                    stack.Push(new Number((operand_1 as Number)!.Value / (operand_2 as Number)!.Value));
+                    stack.Push(operand_1 / operand_2);
                     counter++;
                     break;
 
@@ -101,15 +120,13 @@ class VirtualMachine(byte[] program)
                     operand_1 = stack.Pop();
                     operand_2 = stack.Pop();
 
-                    stack.Push(new Number((operand_1 as Number)!.Value * (operand_2 as Number)!.Value));
+                    stack.Push(operand_1 * operand_2);
                     counter++;
                     break;
 
                 case Instructions.MOD:
                     operand_2 = stack.Pop();
                     operand_1 = stack.Pop();
-
-                    Console.WriteLine($"{operand_1.Value}, {operand_2.Value}");
 
                     counter++;
                     break;
@@ -118,7 +135,7 @@ class VirtualMachine(byte[] program)
                     operand_2 = stack.Pop();
                     operand_1 = stack.Pop();
 
-                    stack.Push(new Number((int)Math.Pow((operand_1 as Number)!.Value, (operand_2 as Number)!.Value)));
+                    stack.Push((int)Math.Pow(operand_1, operand_2));
                     counter++;
                     break;
 
@@ -126,7 +143,7 @@ class VirtualMachine(byte[] program)
                     operand_2 = stack.Pop();
                     operand_1 = stack.Pop();
 
-                    stack.Push(new Number((operand_1 as Number)!.Value < (operand_2 as Number)!.Value ? 1 : 0));
+                    stack.Push(operand_1 < operand_2 ? 1 : 0);
                     counter++;
                     break;
 
@@ -134,7 +151,7 @@ class VirtualMachine(byte[] program)
                     operand_2 = stack.Pop();
                     operand_1 = stack.Pop();
 
-                    stack.Push(new Number((operand_1 as Number)!.Value > (operand_2 as Number)!.Value ? 1 : 0));
+                    stack.Push(operand_1 > operand_2 ? 1 : 0);
                     counter++;
                     break;
 
@@ -142,19 +159,19 @@ class VirtualMachine(byte[] program)
                     operand_1 = stack.Pop();
                     operand_2 = stack.Pop();
 
-                    stack.Push(new Number((operand_1 as Number)!.Value == (operand_2 as Number)!.Value ? 1 : 0));
+                    stack.Push(operand_1 == operand_2 ? 1 : 0);
                     counter++;
                     break;
 
                 case Instructions.NEG:
-                    stack.Push(new Number(-(stack.Pop() as Number)!.Value));
+                    stack.Push(-stack.Pop());
                     counter++;
                     break;
 
                 case Instructions.NOT:
-                    if ((stack.Pop() as Number)!.Value != 0)
-                        stack.Push(new Number(0));
-                    else stack.Push(new Number(1));
+                    if (stack.Pop() != 0)
+                        stack.Push(0);
+                    else stack.Push(1);
 
                     counter++;
                     break;
@@ -163,7 +180,7 @@ class VirtualMachine(byte[] program)
                     operand_2 = stack.Pop();
                     operand_1 = stack.Pop();
 
-                    stack.Push(new Number((operand_1 as Number)!.Value | (operand_2 as Number)!.Value));
+                    stack.Push(operand_1 | operand_2);
                     counter++;
                     break;
 
@@ -171,7 +188,7 @@ class VirtualMachine(byte[] program)
                     operand_2 = stack.Pop();
                     operand_1 = stack.Pop();
 
-                    stack.Push(new Number((operand_1 as Number)!.Value & (operand_2 as Number)!.Value));
+                    stack.Push(operand_1 & operand_2);
                     counter++;
                     break;
 
@@ -179,7 +196,7 @@ class VirtualMachine(byte[] program)
                     operand_2 = stack.Pop();
                     operand_1 = stack.Pop();
 
-                    stack.Push(new Number((operand_1 as Number)!.Value << (int)(operand_2 as Number)!.Value));
+                    stack.Push(operand_1 << operand_2);
                     counter++;
                     break;
 
@@ -187,75 +204,119 @@ class VirtualMachine(byte[] program)
                     operand_2 = stack.Pop();
                     operand_1 = stack.Pop();
 
-                    stack.Push(new Number((operand_1 as Number)!.Value >> (int)(operand_2 as Number)!.Value));
+                    stack.Push(operand_1 >> operand_2);
                     counter++;
                     break;
 
                 case Instructions.LOAD:
-                    Number index = (Number)stack.Pop();
+                    int index = stack.Pop();
 
-                    IValue[] arr = stackFrames.Pook();
+                    int[] arr = stackFrames.Pook();
 
-                    stack.Push(arr[index.Value]);
+                    stack.Push(arr[index]);
 
                     counter++;
                     break;
 
                 case Instructions.STORE:
-                    index = (Number)stack.Pop();
-                    IValue val = stack.Pop();
+                    index = stack.Pop();
+                    int val = stack.Pop();
 
                     arr = stackFrames.Pook();
 
-                    arr[index.Value] = val;
+                    arr[index] = val;
 
                     counter++;
                     break;
 
+                case Instructions.GSTORE_STR:
+                    size = stack.Pop();
+                    index = stack.Pop();
+
+                    if (index % 4 != 0)
+                    {
+                        throw new Exception("Invalid memory address");
+                    }
+
+                    if (VMSpecs.HEAP_INDEX + size > VMSpecs.MEMORY_SIZE)
+                    {
+                        throw new Exception("Out of memory");
+                    }
+
+                    if (index < VMSpecs.HEAP_INDEX)
+                    {
+                        throw new Exception("Memory already occupied");
+                    }
+
+                    counter++;
+
+                    byte[] str = program[counter..(counter + size)];
+
+                    foreach (var s in str)
+                    {
+                        memory[index] = s;
+                        index++;
+                    }
+
+                    int increment = size % 4 == 0 ? size : size + (4 - size % 4);
+
+                    counter += size;
+                    VMSpecs.HEAP_INDEX += increment;
+
+                    Console.WriteLine($"Heap Index: {VMSpecs.HEAP_INDEX}");
+
+                    break;
 
                 case Instructions.GLOAD:
-                    index = (Number)stack.Pop();
-                    val = memory[index.Value];
+                    index = stack.Pop();
+                    val = memory[index];
 
                     stack.Push(val);
                     counter++;
                     break;
 
                 case Instructions.GSTORE:
-                    index = (Number)stack.Pop();
+                    index = stack.Pop();
                     val = stack.Pop();
 
-                    memory[index.Value] = val;
+                    byte[] val_bytes = BitConverter.GetBytes(val);
+
+                    foreach (byte b in val_bytes)
+                    {
+                        memory[index] = b;
+                        index++;
+                    }
+
                     counter++;
                     break;
 
                 case Instructions.JUMP:
-                    Number destination = (Number)stack.Pop();
+                    int destination = stack.Pop();
 
-                    counter = (int)destination.Value;
+                    counter = destination;
                     break;
 
                 case Instructions.CJUMP:
-                    destination = (Number)stack.Pop();
-                    Number condition = (Number)stack.Pop();
+                    destination = stack.Pop();
+                    int condition = stack.Pop();
 
-                    counter = (int)(condition.Value != 0 ? destination.Value : counter + 1);
+                    counter = (int)(condition != 0 ? destination : counter + 1);
                     break;
 
                 case Instructions.CALL:
                     call_stack.Push(counter + 5);
-                    stackFrames.Push(new IValue[32]);
-                    destination = new Number(ByteManipulation.ToUint32(program.Skip(counter + 1).Take(4).ToArray()));
+                    stackFrames.Push(new int[32]);
+                    destination = ByteManipulation.ToUint32([.. program.Skip(counter + 1).Take(4)]);
 
-                    counter = (int)destination.Value;
+                    counter = destination;
                     break;
 
                 case Instructions.RET:
                     try
                     {
-                        index = new Number(call_stack.Pop());
+                        index = call_stack.Pop();
                         stackFrames.Pop();
-                        counter = (int)index.Value;
+                        counter = index;
                     }
                     catch (Exception)
                     {
@@ -276,7 +337,7 @@ class VirtualMachine(byte[] program)
     {
         Console.Write($"\nSTACK:\n\n[ ");
 
-        StackToLoggable(stack).StackLogger(50);
+        stack.StackLogger(50);
 
         Console.Write("]\n\n");
 
@@ -285,11 +346,10 @@ class VirtualMachine(byte[] program)
         Console.Write("MEMORY:\n\n[ ");
 
         int count = 0;
-        string[] LoggableMemory = ArrToLoggable(memory);
 
-        while (count < 50)
+        while (count < 100)
         {
-            Console.Write(LoggableMemory[count] + " ");
+            Console.Write(memory[count] + " ");
             count++;
         }
 
@@ -305,7 +365,7 @@ class VirtualMachine(byte[] program)
             {
                 Console.Write($"- Stack frame no. {count}\n\n[ ");
 
-                string[] el = ArrToLoggable(stackFrames.ElementAt(count));
+                int[] el = stackFrames.ElementAt(count);
 
                 foreach (var item in el)
                     Console.Write(item + " ");
@@ -338,30 +398,30 @@ class VirtualMachine(byte[] program)
         Console.WriteLine($"Call Stack Pointer: {call_stack.head}\n");
     }
 
-    public static Stack<string> StackToLoggable(Stack<IValue> stack)
-    {
-        return stack.Map(x =>
-        {
-            return x switch
-            {
-                Number num => num.Value.ToString(),
-                String str => str.Value.ToString(),
-                Char chr => chr.Value.ToString(),
-                _ => 0.ToString(),
-            };
-        });
-    }
+    // public static Stack<string> StackToLoggable(Stack<int> stack)
+    // {
+    //     return stack.Map(x =>
+    //     {
+    //         return x switch
+    //         {
+    //             int num => num.ToString(),
+    //             char str => str.Value.ToString(),
+    //             Char chr => chr.Value.ToString(),
+    //             _ => 0.ToString(),
+    //         };
+    //     });
+    // }
 
-    public static string[] ArrToLoggable(IValue[] arr)
-    {
-        return arr.Select(x =>
-        {
-            return x switch
-            {
-                Number num => num.Value.ToString(),
-                String str => str.Value.ToString(),
-                _ => 0.ToString(),
-            };
-        }).ToArray();
-    }
+    // public static string[] ArrToLoggable(IValue[] arr)
+    // {
+    //     return arr.Select(x =>
+    //     {
+    //         return x switch
+    //         {
+    //             Number num => num.Value.ToString(),
+    //             String str => str.Value.ToString(),
+    //             _ => 0.ToString(),
+    //         };
+    //     }).ToArray();
+    // }
 }

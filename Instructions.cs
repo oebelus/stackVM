@@ -38,7 +38,9 @@ public enum Instructions : byte
 
     PUSH_STR,
     PUSH_CHAR,
-    CONCAT
+    CONCAT,
+
+    GSTORE_STR,
 }
 
 class Instruction
@@ -75,6 +77,7 @@ class Instruction
         {"PUSH_STR", 27},
         {"PUSH_CHAR", 28},
         {"CONCAT", 29},
+        {"GSTORE_STR", 30},
     };
 
     // public static Dictionary<TokenType, string> cOperation = new()

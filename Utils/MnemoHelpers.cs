@@ -7,6 +7,12 @@ class MnemoHelpers
         List<string> mnemonic = [];
         int length = bytecode.Length;
 
+        foreach (var item in bytecode)
+        {
+            Console.Write($"{item} ");
+        }
+        Console.WriteLine();
+
         int i = 0;
         while (i < length)
         {
@@ -42,6 +48,17 @@ class MnemoHelpers
                 i += 4;
 
                 mnemonic.Add($"{i}: {Instruction.vInstruction.FirstOrDefault(x => x.Value == instruction).Key} {c}");
+            }
+            else if (bytecode[i] == 30)
+            {
+                byte instruction = bytecode[i];
+                int size = bytecode[i - 1];
+                i++;
+
+                string s = ByteManipulation.DeserializeString(bytecode[i..(i + size)]);
+                i += size;
+
+                mnemonic.Add($"{i}: {Instruction.vInstruction.FirstOrDefault(x => x.Value == instruction).Key} {s}");
             }
             else
             {

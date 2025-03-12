@@ -1,8 +1,9 @@
 interface IValue
 {
-    int Size { get; set; }
-    string Type => GetType().Name;
-    object Value { get; }
+    public int Size { get; set; }
+    public string Type => GetType().Name;
+    public object Value { get; }
+
 }
 
 record Number(int Value) : IValue
@@ -12,10 +13,19 @@ record Number(int Value) : IValue
     object IValue.Value => Value.ToString();
 }
 
-record String(string Value) : IValue
+record Obj(object Value, int Size, int Pointer) : IValue
 {
-    public int Size { get; set; } = Value.Length;
-    object IValue.Value => Value.ToString();
+    public int Pointer { get; set; } = Pointer;
+    int IValue.Size { get; set; } = Size;
+    object IValue.Value => Value;
+
+}
+
+record String(string Val, int Pointer) : Obj(Val, Val.Length, Pointer)
+{
+    public new int Pointer = Pointer;
+    public new int Size { get; set; } = Val.Length;
+    public new object Value => Value;
 }
 
 record Char(char Value) : IValue
@@ -37,10 +47,3 @@ record Boolean(bool Value) : IValue
     public int Size { get; set; } = 4;
     object IValue.Value => Value.ToString();
 }
-
-/*
-
-int charSize = 2;
-int stringSize = charSize * strLength;
-
-*/

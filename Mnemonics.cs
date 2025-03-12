@@ -20,7 +20,7 @@ class Mnemonics
     }
     public static byte[] Mnemonic(string mnemo)
     {
-        string[] mnemonics = mnemo.Split(' ');
+        string[] mnemonics = TokenizeMnemonics(mnemo);
         Dictionary<string, int> addresses = MapAddress(mnemonics);
         List<byte> buffer = [];
         int length = mnemonics.Length;
@@ -71,7 +71,7 @@ class Mnemonics
                         buffer.Add(item);
                     }
 
-                    byte[] byteStr = ByteManipulation.SerializeString(str, 4);
+                    byte[] byteStr = ByteManipulation.SerializeString(str);
 
                     foreach (var item in byteStr)
                     {
@@ -95,9 +95,22 @@ class Mnemonics
                         throw new Exception("Missing arguments for PUSH_CHAR_CONST");
                     }
 
-                    byte[] charArray = ByteManipulation.SerializeString(c, 4);
+                    byte[] charArray = ByteManipulation.SerializeString(c);
 
                     foreach (var item in charArray)
+                    {
+                        buffer.Add(item);
+                    }
+                }
+                else if (value == 30)
+                {
+                    buffer.Add(30);
+
+                    i++;
+
+                    byte[] str_bytes = ByteManipulation.SerializeString(mnemonics[i].Trim());
+
+                    foreach (var item in str_bytes)
                     {
                         buffer.Add(item);
                     }
@@ -156,5 +169,40 @@ class Mnemonics
             }
         }
         return -1;
+    }
+    public static string[] TokenizeMnemonics(string mnemo)
+    {
+        List<string> tokens = [];
+
+        for (int i = 0; i < mnemo.Length; i++)
+        {
+            if (mnemo[i] == ' ')
+            {
+                continue;
+            }
+            else if (mnemo[i] == '"')
+            {
+                string str = "";
+                while (mnemo[++i] != '"')
+                {
+                    str += mnemo[i];
+                }
+                tokens.Add(str);
+            }
+            else
+            {
+                string token = "";
+                while (mnemo[i] != ' ')
+                {
+                    token += mnemo[i];
+                    i++;
+                }
+                tokens.Add(token);
+            }
+        }
+
+        foreach (var x in tokens) Console.WriteLine(x);
+
+        return [.. tokens];
     }
 }
