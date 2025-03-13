@@ -9,6 +9,7 @@ class VirtualMachine(byte[] program)
     private readonly Stack<int> call_stack = new(VMSpecs.CALL_STACK_SIZE);
     private readonly byte[] program = program;
     private int counter = 0;
+    private Dictionary<int, int> Allocated = [];
 
     public VirtualMachine Execute()
     {
@@ -63,13 +64,12 @@ class VirtualMachine(byte[] program)
                     byte[] str_1 = memory[pointer_1..(pointer_1 + size_1)];
 
                     string concat = ByteManipulation.DeserializeString(str_1) + ByteManipulation.DeserializeString(str_2);
-                    Console.WriteLine(concat);
 
                     byte[] bytes_str = ByteManipulation.SerializeString(concat);
 
                     int ptr = VMSpecs.HEAP_INDEX;
 
-                    Console.WriteLine($"pointer to the heap: {ptr}");
+                    // Console.WriteLine($"pointer to the heap: {ptr}");
 
                     foreach (var b in bytes_str)
                     {
@@ -79,6 +79,8 @@ class VirtualMachine(byte[] program)
                             ptr++;
                         }
                     }
+
+                    Allocated.Add(VMSpecs.HEAP_INDEX, ptr);
 
                     VMSpecs.HEAP_INDEX = ptr + 1;
 
