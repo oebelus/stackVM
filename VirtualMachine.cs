@@ -55,23 +55,28 @@ class VirtualMachine(byte[] program)
                     int size_2 = stack.Pop();
                     int pointer_2 = stack.Pop();
 
-                    byte[] str_2 = memory[pointer_2..size_2];
+                    byte[] str_2 = memory[pointer_2..(pointer_2 + size_2)];
 
                     int size_1 = stack.Pop();
                     int pointer_1 = stack.Pop();
 
-                    byte[] str_1 = memory[pointer_1..size_1];
+                    byte[] str_1 = memory[pointer_1..(pointer_1 + size_1)];
 
                     string concat = ByteManipulation.DeserializeString(str_1) + ByteManipulation.DeserializeString(str_2);
+                    Console.WriteLine(concat);
+
                     byte[] bytes_str = ByteManipulation.SerializeString(concat);
 
                     int ptr = VMSpecs.HEAP_INDEX;
+
+                    Console.WriteLine($"pointer to the heap: {ptr}");
 
                     foreach (var b in bytes_str)
                     {
                         if (ptr < VMSpecs.MEMORY_SIZE)
                         {
                             memory[ptr] = b;
+                            ptr++;
                         }
                     }
 
@@ -243,10 +248,12 @@ class VirtualMachine(byte[] program)
                         throw new Exception("Out of memory");
                     }
 
-                    if (index < VMSpecs.HEAP_INDEX)
+                    while (index < VMSpecs.HEAP_INDEX)
                     {
-                        throw new Exception("Memory already occupied");
+                        index += 4;
                     }
+
+                    // Console.WriteLine($"\nIndex of GSTORE_STR: {index}");
 
                     counter++;
 
@@ -258,12 +265,12 @@ class VirtualMachine(byte[] program)
                         index++;
                     }
 
-                    int increment = size % 4 == 0 ? size : size + (4 - size % 4);
+                    int increment = index % 4 == 0 ? index : index + (4 - index % 4);
+
+                    // Console.WriteLine($"\nAllocation Index: {index}\nHeap Index: {VMSpecs.HEAP_INDEX}\nSize: {size}\nIncrement: {increment}\nNew Heap Index: {increment}\n");
 
                     counter += size;
                     VMSpecs.HEAP_INDEX += increment;
-
-                    Console.WriteLine($"Heap Index: {VMSpecs.HEAP_INDEX}");
 
                     break;
 
@@ -347,7 +354,7 @@ class VirtualMachine(byte[] program)
 
         int count = 0;
 
-        while (count < 100)
+        while (count < 200)
         {
             Console.Write(memory[count] + " ");
             count++;

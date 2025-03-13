@@ -8,7 +8,7 @@
             int l = ByteManipulation.SerializeString("Hello, my name is Imane").Length;
             int r = ByteManipulation.SerializeString("I am a String").Length;
 
-            var mn = Mnemonics.Mnemonic($"PUSH 32 PUSH {l} GSTORE_STR \"Hello, my name is Imane\" PUSH 64 PUSH {r} GSTORE_STR \"I am a String\"");
+            var mn = Mnemonics.Mnemonic($"PUSH 32 PUSH {l} GSTORE_STR \"Hello, my name is Imane\" PUSH 64 PUSH {r} GSTORE_STR \"I am a String\" PUSH 32 PUSH {l} PUSH 64 PUSH {r} CONCAT");
 
             Console.WriteLine();
 

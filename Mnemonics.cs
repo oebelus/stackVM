@@ -20,7 +20,7 @@ class Mnemonics
     }
     public static byte[] Mnemonic(string mnemo)
     {
-        string[] mnemonics = TokenizeMnemonics(mnemo);
+        string[] mnemonics = TokenizeMnemonics(mnemo.Trim());
         Dictionary<string, int> addresses = MapAddress(mnemonics);
         List<byte> buffer = [];
         int length = mnemonics.Length;
@@ -188,20 +188,22 @@ class Mnemonics
                     str += mnemo[i];
                 }
                 tokens.Add(str);
+                // Console.WriteLine($"String: {str}");
             }
             else
             {
                 string token = "";
-                while (mnemo[i] != ' ')
+                while (i < mnemo.Length && mnemo[i] != ' ')
                 {
                     token += mnemo[i];
                     i++;
                 }
                 tokens.Add(token);
+                // Console.WriteLine($"Token: {token}");
             }
         }
 
-        foreach (var x in tokens) Console.WriteLine(x);
+        // foreach (var x in tokens) Console.WriteLine(x);
 
         return [.. tokens];
     }

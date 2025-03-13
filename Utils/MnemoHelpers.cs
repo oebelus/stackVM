@@ -7,12 +7,6 @@ class MnemoHelpers
         List<string> mnemonic = [];
         int length = bytecode.Length;
 
-        foreach (var item in bytecode)
-        {
-            Console.Write($"{item} ");
-        }
-        Console.WriteLine();
-
         int i = 0;
         while (i < length)
         {
