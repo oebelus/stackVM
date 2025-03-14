@@ -1,6 +1,6 @@
 ## A Turing-Complete Stack-Based Virtual Machine
 
-The Stack-Based Virtual Machine (SVM) is a Turing Complete virtual machine created using C#. It's designed to handle various tasks like arithmetic operations, manipulating stacks, control flow, and managing memory.
+The Stack-Based Virtual Machine (SstackVM) is a Turing Complete virtual machine created using C#. It's designed to handle various tasks like arithmetic operations, manipulating stacks, control flow, and managing memory.
 
 > It executes bytecode instructions, with the possibility to convert human-readable mnemonics to bytecode. The program can either look like this:
 
@@ -19,7 +19,7 @@ byte[] program = [0, 0, 0, 0, 5, // PUSH 5
 string program = "PUSH 5 PUSH 7 CALL <add> PUSH 4 PUSH 8 CALL <sub> HALT </add> ADD RET </sub> SUB RET"
 ```
 
-The program above is parsed and turned into bytecode before getting executed by the VM;
+The program above is parsed and turned into bytecode before getting executed by the stackVM;
 
 > It supports:
 
@@ -59,6 +59,7 @@ Call Stack Pointer: 0
 ```
 
 - More code:
+
 ```
 Equality: PUSH 5 PUSH 5 EQ PUSH 23 CJUMP PUSH 0 HALT PUSH 1 HALT
 Even: PUSH 2 PUSH 7 MOD PUSH 23 CJUMP PUSH 1 HALT PUSH 0 HALT

@@ -1,12 +1,12 @@
-using Instructions = vm.Instructions;
+using Instructions = stackVM.Instructions;
 
 class VirtualMachine(byte[] program)
 {
-    static readonly Specs VMSpecs = new();
-    private readonly byte[] memory = new byte[VMSpecs.MEMORY_SIZE];
-    private readonly Stack<int> stack = new(VMSpecs.STACK_SIZE);
-    private readonly Stack<int[]> stackFrames = new(VMSpecs.STACK_FRAMES_SIZE);
-    private readonly Stack<int> call_stack = new(VMSpecs.CALL_STACK_SIZE);
+    static readonly Specs stackVMSpecs = new();
+    private readonly byte[] memory = new byte[stackVMSpecs.MEMORY_SIZE];
+    private readonly Stack<int> stack = new(stackVMSpecs.STACK_SIZE);
+    private readonly Stack<int[]> stackFrames = new(stackVMSpecs.STACK_FRAMES_SIZE);
+    private readonly Stack<int> call_stack = new(stackVMSpecs.CALL_STACK_SIZE);
     private readonly byte[] program = program;
     private int counter = 0;
     private Dictionary<int, int> Allocated = [];
@@ -67,22 +67,22 @@ class VirtualMachine(byte[] program)
 
                     byte[] bytes_str = ByteManipulation.SerializeString(concat);
 
-                    int ptr = VMSpecs.HEAP_INDEX;
+                    int ptr = stackVMSpecs.HEAP_INDEX;
 
                     // Console.WriteLine($"pointer to the heap: {ptr}");
 
                     foreach (var b in bytes_str)
                     {
-                        if (ptr < VMSpecs.MEMORY_SIZE)
+                        if (ptr < stackVMSpecs.MEMORY_SIZE)
                         {
                             memory[ptr] = b;
                             ptr++;
                         }
                     }
 
-                    Allocated.Add(VMSpecs.HEAP_INDEX, ptr);
+                    Allocated.Add(stackVMSpecs.HEAP_INDEX, ptr);
 
-                    VMSpecs.HEAP_INDEX = ptr + 1;
+                    stackVMSpecs.HEAP_INDEX = ptr + 1;
 
                     counter += 17;
                     break;
@@ -245,12 +245,12 @@ class VirtualMachine(byte[] program)
                         throw new Exception("Invalid memory address");
                     }
 
-                    if (VMSpecs.HEAP_INDEX + size > VMSpecs.MEMORY_SIZE)
+                    if (stackVMSpecs.HEAP_INDEX + size > stackVMSpecs.MEMORY_SIZE)
                     {
                         throw new Exception("Out of memory");
                     }
 
-                    while (index < VMSpecs.HEAP_INDEX)
+                    while (index < stackVMSpecs.HEAP_INDEX)
                     {
                         index += 4;
                     }
@@ -269,10 +269,10 @@ class VirtualMachine(byte[] program)
 
                     int increment = index % 4 == 0 ? index : index + (4 - index % 4);
 
-                    // Console.WriteLine($"\nAllocation Index: {index}\nHeap Index: {VMSpecs.HEAP_INDEX}\nSize: {size}\nIncrement: {increment}\nNew Heap Index: {increment}\n");
+                    // Console.WriteLine($"\nAllocation Index: {index}\nHeap Index: {stackVMSpecs.HEAP_INDEX}\nSize: {size}\nIncrement: {increment}\nNew Heap Index: {increment}\n");
 
                     counter += size;
-                    VMSpecs.HEAP_INDEX += increment;
+                    stackVMSpecs.HEAP_INDEX += increment;
 
                     break;
 

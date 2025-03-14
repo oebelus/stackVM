@@ -1,4 +1,4 @@
-using vm;
+using stackVM;
 
 class MnemoHelpers
 {

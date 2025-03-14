@@ -1,5 +1,5 @@
 using System.Text;
-using Instruction = vm.Instruction;
+using Instruction = stackVM.Instruction;
 
 class Mnemonics
 {
